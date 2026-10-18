@@ -23,7 +23,7 @@ export function bindHotsearchWorkspace(root, initial, host) {
       node.classList.toggle('is-transient',feedbackTemporary);
     }
   }
-  function feedback(message, duration=0) {
+  function feedback(message, duration=3000) {
     clearTimeout(feedbackTimer);
     feedbackMessage=message; feedbackTemporary=duration>0;
     renderFeedback();

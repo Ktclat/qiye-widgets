@@ -120,3 +120,36 @@
  .fc-drop { min-height:135px; }
  .fc-bottom { position:sticky;bottom:-12px;margin:0 -12px -12px;padding:10px 12px 12px;background:var(--app-bg);border-top:1px solid var(--app-border);z-index:1; }
 }
+
+/* A single compact conversion surface; no nested placeholder panel. */
+.widget-inner.w-extension[data-widget="file-converter"]{--w-bg:#e9f1f2;--w-fg:#24494c;--w-muted:#617f82;--w-accent:#297c80;background:var(--w-bg);padding:12px;gap:4px}
+html[data-theme=dark] .widget-inner.w-extension[data-widget="file-converter"]{--w-bg:#1e343c;--w-fg:#d8eeef;--w-muted:#94b7bb;--w-accent:#88d4cd}
+.widget-inner.w-extension[data-widget="file-converter"] .fc-launch{gap:8px;padding:0;background:transparent;border-radius:12px;justify-content:center}
+.widget-inner.w-extension[data-widget="file-converter"] .fc-launch-symbol{position:relative;display:flex;gap:6px;align-items:center;justify-content:center;width:100%;height:52px;background:none;border-radius:0}
+.fc-launch .fc-file{position:relative;display:grid;place-items:center;width:42px;height:49px;border:1px solid color-mix(in srgb,var(--w-accent) 26%,transparent);border-radius:8px;background:color-mix(in srgb,var(--w-accent) 10%,transparent);font-size:9px;font-weight:650;letter-spacing:.02em;color:var(--w-fg);padding-top:9px}
+.fc-launch .fc-file:before{content:"";position:absolute;top:9px;left:11px;width:18px;border-top:2px solid var(--w-muted);opacity:.5}
+.fc-launch .fc-file-target{background:color-mix(in srgb,var(--w-accent) 20%,transparent);transform:rotate(5deg)}
+.fc-launch .fc-file-source{transform:rotate(-5deg)}
+.fc-convert-arrow .icon{width:18px;height:18px;color:var(--w-accent)}
+.fc-launch-large .fc-launch-info{display:none!important}
+.widget-inner .fc-launch-formats{font-size:10px;opacity:.85}
+.widget-inner .fc-launch-foot{align-self:stretch;justify-content:space-between;margin-top:auto;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--w-accent) 15%,transparent);font-size:9px}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"]{padding:5px}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-launch-symbol{height:30px}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-file{width:23px;height:28px;font-size:6px;padding-top:5px;border-radius:4px}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-file:before{top:5px;left:6px;width:10px;border-width:1px}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-convert-arrow{display:none}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-launch-info small{display:none}
+.w-extension[data-widget="file-converter"][data-display-size="1x1"] .fc-launch-info strong{font-size:8px}
+.w-extension[data-widget="file-converter"][data-display-size="2x1"] .fc-launch{flex-direction:row;gap:8px}
+.w-extension[data-widget="file-converter"][data-display-size="2x1"] .fc-launch-symbol{width:66px;height:34px;flex:none}
+.w-extension[data-widget="file-converter"][data-display-size="2x1"] .fc-file{width:25px;height:31px;font-size:6px}
+.w-extension[data-widget="file-converter"][data-display-size="2x1"] .fc-convert-arrow{display:none}
+.w-extension[data-widget="file-converter"][data-display-size="2x1"] .fc-file:before{left:7px;top:6px;width:10px}
+.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-launch-symbol{height:64px;gap:3px}
+.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-file{width:24px;height:36px;font-size:6px}
+.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-file:before{left:7px;width:10px}
+.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-convert-arrow,.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-launch-info small{display:none}
+.w-extension[data-widget="file-converter"][data-display-size="1x2"] .fc-launch-info strong{font-size:8px}
+.w-extension[data-widget="file-converter"][data-display-size="4x2"] .fc-launch-symbol{gap:16px;height:64px}
+.w-extension[data-widget="file-converter"][data-display-size="4x2"] .fc-file{width:48px;height:58px;font-size:11px}

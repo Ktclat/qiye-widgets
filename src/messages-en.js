@@ -2016,5 +2016,11 @@ export const englishMessages = {
   "请填写和风控制台提供的 API Host（以 .qweatherapi.com 结尾）。": "Enter your API Host from the QWeather console, ending in .qweatherapi.com.",
   "API Key 格式无效。": "Invalid API key format.",
   "未获准访问天气源，请在天气设置中重新保存并授权。": "Weather source access was not granted. Save weather settings again to grant access.",
-  "澳门": "Macao"
+  "澳门": "Macao",
+  "城市布局": "City layout",
+  "每行 {count} 个": "{count} per row",
+  "{count} 列": "{count} columns",
+  "每行 1 个": "1 per row",
+  "每行 2 个": "2 per row",
+  "每行 3 个": "3 per row"
 };

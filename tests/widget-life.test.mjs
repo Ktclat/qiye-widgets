@@ -71,3 +71,10 @@ test('dedicated workspaces escape user text and render the right calendar day co
   const clock=worldClockDesk({...item,config:{...newWidgetConfig('clock'),label:title}},{offset:0});
   assert.ok(clock.includes('&lt;img'));assert.ok(!clock.includes('<img src=x'));
 });
+
+
+test('clock column preferences are optional for old records and reject unsupported layouts',()=>{
+ const legacy=newWidgetConfig('clock');assert.doesNotThrow(()=>validateWidgetConfig('clock',legacy));
+ for(const columns of [1,2,3])assert.equal(validateWidgetConfig('clock',{...legacy,columns}).columns,columns);
+ for(const columns of [0,4,1.5,'3',null])assert.throws(()=>validateWidgetConfig('clock',{...legacy,columns}));
+});

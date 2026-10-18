@@ -48,7 +48,7 @@ export function bindCodecWorkspace(root, initialAlgorithm = 'base64') {
   const input = query('#codec-input'), output = query('#codec-output'), status = query('#codec-status');
   query('[data-codec-beast-alphabet]').value = BEAST_ALPHABET;
   let algorithm = codecAlgorithm(initialAlgorithm) || codecAlgorithm('base64');
-  let direction = 'encode', revision = 0, timer, hasResult = false, composing = false;
+  let direction = 'encode', revision = 0, timer, messageTimer, hasResult = false, composing = false;
   const isHash = () => algorithm.group === 'hash';
   const mode = () => isHash() ? 'encode' : direction;
   const options = () => ({urlMode:query('[data-codec-url-mode]').value, uppercase:query('[data-codec-uppercase]').checked, beastAlphabet:query('[data-codec-beast-alphabet]').value});
@@ -58,7 +58,8 @@ export function bindCodecWorkspace(root, initialAlgorithm = 'base64') {
     query('[data-codec-action=reuse]').disabled = !hasResult || output.value.length > CODEC_INPUT_LIMIT;
   }
   function message(text, error = false) {
-    status.textContent = text;
+    clearTimeout(messageTimer);status.textContent = text;
+    if(text&&!error)messageTimer=setTimeout(()=>{status.textContent='';},3000);
     status.classList.toggle('is-error', error);
     input.setAttribute('aria-invalid', String(error));
   }
@@ -169,5 +170,5 @@ export function bindCodecWorkspace(root, initialAlgorithm = 'base64') {
     if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !event.isComposing) { event.preventDefault(); event.stopPropagation(); void run(); }
   }, listener);
   updateMethod();
-  return () => { controller.abort(); revision++; clearTimeout(timer); input.value = ''; output.value = ''; query('[data-codec-beast-alphabet]').value = ''; };
+  return () => { controller.abort(); revision++; clearTimeout(timer); clearTimeout(messageTimer); input.value = ''; output.value = ''; query('[data-codec-beast-alphabet]').value = ''; };
 }

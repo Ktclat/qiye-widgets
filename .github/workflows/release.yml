@@ -38,6 +38,7 @@ jobs:
           python tests/cache-e2e.py
           python tests/view-switch-e2e.py
           python tests/window-e2e.py
+          python tests/widget-controls-e2e.py
       - uses: actions/upload-artifact@v4
         with:
           name: widgets-release

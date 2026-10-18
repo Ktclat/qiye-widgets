@@ -21,8 +21,9 @@ export function bindLifeWorkspace(root,initial,host) {
   const alive=()=>!controller.signal.aborted&&root.isConnected&&!!current();
   const content=root.querySelector('[data-life-content]'),editor=root.querySelector('[data-life-editor]');
   const view={active:kind==='countdown'?countdownEntries(initial)[0]?.id:initial.data.habits?.[0]?.id,category:'all',filter:'all',week:0,month:localDateKey().slice(0,7),add:false,offset:0,deleted:null};
+  let feedbackTimer;
   let busy=false,editing=false,returnFocus=null,lastDay=localDateKey(),cleanupNotes=()=>{};
-  const feedback=message=>{const node=root.querySelector('.life-feedback');node.textContent=message;node.hidden=!message;};
+  const feedback=message=>{clearTimeout(feedbackTimer);const node=root.querySelector('.life-feedback');node.textContent=message;node.hidden=!message;if(message)feedbackTimer=setTimeout(()=>{node.hidden=true;},message===t('倒数日已删除')?8000:3000);};
   function draw() {
     if(!alive())return;
     const scroll=content.scrollTop,focused=document.activeElement;
@@ -107,11 +108,12 @@ export function bindLifeWorkspace(root,initial,host) {
     });
     if(action==='countdown-undo'&&view.deleted)return run(async()=>{await dataSave({events:[...countdownEntries(current()),view.deleted]});view.active=view.deleted.id;view.deleted=null;draw();});
     if(action==='workday-weekdays'){for(const input of content.querySelectorAll('[name=workdays]'))input.checked=Number(input.value)>=1&&Number(input.value)<=5;updatePreview();return;}
-    if(button.dataset.noteColor)return run(async()=>{await settingsSave({config:{...current().config,color:button.dataset.noteColor}});content.querySelector('[data-note-paper]').className='notes-desk notes-paper-'+button.dataset.noteColor;for(const swatch of content.querySelectorAll('[data-note-color]'))swatch.setAttribute('aria-pressed',String(swatch===button));});
+    if(button.dataset.noteColor)return run(async()=>{await settingsSave({config:{...current().config,color:button.dataset.noteColor}});content.querySelector('[data-note-paper]').className='notes-desk notes-paper-'+button.dataset.noteColor;root.querySelector('.life-notes').className='utility-app life-app life-notes notes-paper-'+button.dataset.noteColor;for(const swatch of content.querySelectorAll('[data-note-color]'))swatch.setAttribute('aria-pressed',String(swatch===button));});
     if(action==='notes-export'){
       const item=current(),url=URL.createObjectURL(new Blob([item.data.notes],{type:'text/plain;charset=utf-8'})),link=document.createElement('a');
       link.href=url;link.download=item.title.replace(/[\\/:*?"<>|]/g,'_')+'.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;
     }
+    if(button.dataset.clockColumns)return run(async()=>{await settingsSave({config:{...current().config,columns:Number(button.dataset.clockColumns)}});draw();});
     if(action==='clock-add'){openEditor(clockEditor(current()));return;}
     if(button.dataset.clockAddZone)return run(()=>saveCities([...clockCities(current().config),{label:t(CLOCK_CITIES.find(c=>c[1]===button.dataset.clockAddZone)[0]),timeZone:button.dataset.clockAddZone}]));
     if(action==='clock-remove')return run(()=>saveCities(clockCities(current().config).filter(c=>c.timeZone!==button.dataset.zone)));
@@ -172,5 +174,5 @@ export function bindLifeWorkspace(root,initial,host) {
   draw();
   if(kind==='notes')cleanupNotes=bindWidgets(root,{...host,openDialog:()=>{}});
   const timer=kind==='notes'?null:setInterval(tick,1000);
-  return ()=>{controller.abort();clearInterval(timer);cleanupNotes();};
+  return ()=>{controller.abort();clearTimeout(feedbackTimer);clearInterval(timer);return cleanupNotes();};
 }

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
+import { icon } from './icons.js';
 // Inert API v3 card. The host handles data-action="widget-open"; all files stay in the workspace.
 export const fileConverterWidget = {
   apiVersion: 3,
@@ -14,14 +15,15 @@ export const fileConverterWidget = {
     { key: 'quality', label: '默认输出画质', type: 'number', default: 90, min: 50, max: 100, integer: true },
   ],
   render({ item, config, size, escapeHtml, t }) {
-    const title = escapeHtml(item.title);
-    const label = escapeHtml(t('打开文件转换'));
+    const name = item.title || t('文件转换');
+    const title = escapeHtml(name);
+    const label = escapeHtml(t('打开文件转换')+' · '+name);
     const target = String(config.outputFormat || 'webp').toUpperCase().replace('JPEG', 'JPG');
     const compact = size === '1x1' || size === '1x2' || size === '2x1';
     return `<button type="button" class="fc-launch ${compact ? 'fc-launch-compact' : 'fc-launch-large'}" data-action="widget-open" aria-label="${label}">
-      <span class="fc-launch-symbol" aria-hidden="true">⇄</span>
-      <span class="fc-launch-info"><strong>${title}</strong><small>${escapeHtml(t('图片格式转换'))}</small></span>
-      ${compact ? '' : `<span class="fc-launch-formats" aria-hidden="true">PNG · JPG · WebP</span><span class="fc-launch-foot">${escapeHtml(t('本地处理 · 点击转换'))} <b>${target}</b></span>`}
+      <span class="fc-launch-symbol" aria-hidden="true"><span class="fc-file fc-file-source">PNG</span><span class="fc-convert-arrow">${icon('converter')}</span><span class="fc-file fc-file-target">${target}</span></span>
+      <span class="fc-launch-info">${compact?`<strong>${title}</strong>`:''}<small>${escapeHtml(t('图片格式转换'))}</small></span>
+      ${compact ? '' : `<span class="fc-launch-formats" aria-hidden="true">PNG / JPG / WebP</span><span class="fc-launch-foot">${escapeHtml(t('本地处理 · 点击转换'))}<span aria-hidden="true">↗</span></span>`}
     </button>`;
   },
 };

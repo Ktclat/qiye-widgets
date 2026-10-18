@@ -42,7 +42,7 @@ for manifest in manifests:
 catalog={'format':'qiye-widget-source','version':1,'name':'栖页官方小组件 / Qiye Widgets','widgets':manifests}
 (out/'index.json').write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (release/'index.json').write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-(out/'.nojekyll').write_text('');shutil.copyfile(root/'LICENSE',out/'LICENSE');shutil.copyfile(root/'LICENSE-GPL-3.0',out/'LICENSE-GPL-3.0')
+(out/'.nojekyll').write_text('');shutil.copyfile(root/'LICENSE',out/'LICENSE');shutil.copyfile(root/'LICENSE',out/'LICENSE-GPL-3.0')
 (out/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>Qiye Widgets</title><h1>栖页小组件</h1><p>在栖页设置 → 组件源中启用官方源。</p><p><a href="index.json">组件目录 '+version+'</a> · <a href="https://github.com/Ktclat/qiye-widgets">源码与文档</a></p>',encoding='utf-8')
 shutil.copyfile(root/'README.md',out/'README.md')
 shutil.copytree(root/'community',out/'community',dirs_exist_ok=True)
