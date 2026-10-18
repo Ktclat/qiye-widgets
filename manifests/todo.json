@@ -1,0 +1,22 @@
+{
+  "format": "qiye-widget",
+  "version": 2,
+  "apiVersion": 2,
+  "id": "qiye.todo",
+  "name": "待办清单",
+  "description": "添加、勾选和删除日常任务",
+  "author": "Ktclat",
+  "release": "1.0.0",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.0/widget.html?widget=todo",
+  "repository": "https://github.com/Ktclat/qiye-widgets",
+  "license": "AGPL-3.0-only AND GPL-3.0-only",
+  "sizes": [
+    "1x1",
+    "1x2",
+    "2x1",
+    "2x2",
+    "4x2"
+  ],
+  "previews": [],
+  "capabilities": []
+}

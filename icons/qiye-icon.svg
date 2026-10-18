@@ -1,0 +1,78 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="86" y1="62" x2="430" y2="452" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16364A"/>
+      <stop offset="0.52" stop-color="#102B3C"/>
+      <stop offset="1" stop-color="#0B2231"/>
+    </linearGradient>
+
+    <linearGradient id="qMain" x1="150" y1="130" x2="372" y2="386" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C9FFF0"/>
+      <stop offset="0.52" stop-color="#8EE8D5"/>
+      <stop offset="1" stop-color="#67CFBC"/>
+    </linearGradient>
+
+    <linearGradient id="fold" x1="319" y1="241" x2="401" y2="362" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#64CBBB"/>
+      <stop offset="1" stop-color="#3CB4A1"/>
+    </linearGradient>
+
+    <linearGradient id="leaf" x1="292" y1="286" x2="390" y2="387" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D5FFF3"/>
+      <stop offset="1" stop-color="#87E8D6"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#001019" flood-opacity="0.26"/>
+    </filter>
+  </defs>
+
+  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bg)" filter="url(#shadow)"/>
+
+  <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M164 127
+           C120 127 91 157 91 202
+           V312
+           C91 357 120 386 164 386
+           H309
+           C354 386 383 357 383 312
+           V202
+           C383 157 354 127 309 127
+           H164ZM177 198
+           C160 198 149 209 149 226
+           V288
+           C149 305 160 316 177 316
+           H296
+           C313 316 324 305 324 288
+           V226
+           C324 209 313 198 296 198
+           H177Z"
+        fill="url(#qMain)"/>
+
+  <path d="M301 198
+           C322 198 346 203 366 214
+           L383 224
+           V312
+           C383 335 374 354 357 368
+           C357 338 344 309 321 288
+           C309 277 299 262 299 243
+           V208
+           C299 204 300 201 301 198Z"
+        fill="url(#fold)"
+        opacity="0.96"/>
+
+  <path d="M272 286
+           C316 284 350 295 375 320
+           C394 339 400 361 399 385
+           C370 387 344 383 323 370
+           C294 352 276 326 272 286Z"
+        fill="url(#leaf)"/>
+
+  <path d="M273 287
+           C278 326 295 352 323 370
+           C307 368 292 361 280 350
+           C261 332 254 310 257 285
+           C262 286 267 286 273 287Z"
+        fill="#2C9F90"
+        opacity="0.45"/>
+</svg>

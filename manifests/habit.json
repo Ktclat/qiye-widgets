@@ -1,0 +1,22 @@
+{
+  "format": "qiye-widget",
+  "version": 2,
+  "apiVersion": 2,
+  "id": "qiye.habit",
+  "name": "习惯打卡",
+  "description": "每日打卡和连续天数",
+  "author": "Ktclat",
+  "release": "1.0.0",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.0/widget.html?widget=habit",
+  "repository": "https://github.com/Ktclat/qiye-widgets",
+  "license": "AGPL-3.0-only AND GPL-3.0-only",
+  "sizes": [
+    "1x1",
+    "1x2",
+    "2x1",
+    "2x2",
+    "4x2"
+  ],
+  "previews": [],
+  "capabilities": []
+}

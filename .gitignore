@@ -1,0 +1,6 @@
+dist/
+output/
+__pycache__/
+node_modules/
+*.log
+.test-tools/

@@ -1,0 +1,36 @@
+/* SPDX-License-Identifier: GPL-3.0-only */
+:root {
+  --accent-soft:color-mix(in srgb,var(--accent) 16%,transparent);
+  --accent-strong:color-mix(in srgb,var(--accent) 85%,#111);
+  --catalog-card:rgb(255 255 255 / .07);
+  --catalog-arrow:rgb(24 28 34 / .35);
+  --option-bg:#272b32;
+}
+html[data-theme=dark] { color-scheme:dark; }
+html[data-theme=light] {
+  color-scheme:light;
+  --catalog-card:rgb(255 255 255 / .76);
+  --catalog-arrow:rgb(255 255 255 / .5);
+  --option-bg:#f7f8fa;
+}
+select { color-scheme:inherit; accent-color:var(--accent); }
+select option,select optgroup { background:var(--option-bg); color:var(--fg); }
+select option:disabled { color:var(--muted); }
+input[type=checkbox],input[type=radio] { accent-color:var(--accent); }
+.primary-button,.switch input:checked+.slider { background:var(--accent); color:var(--accent-ink); }
+html[data-accent=custom] .widget-inner { --w-accent:var(--accent); --w-accent-ink:var(--accent-ink); --w-accent-hover:color-mix(in srgb,var(--accent) 85%,var(--w-fg)); }
+html[data-accent=custom] #dialog.widget-app-dialog { --app-blue:var(--accent); }
+html[data-accent=custom] .calendar-app-icon,
+html[data-accent=custom] .calendar-day.selected,
+html[data-accent=custom] .memo-new-button { background:var(--accent); color:var(--accent-ink); }
+html[data-accent=custom] .compact-calendar .compact-value { background:var(--accent); color:var(--accent-ink); }
+@media (forced-colors:active) {
+  select,select option { background:Canvas; color:CanvasText; }
+  .catalog-size-dots [aria-pressed=true] span { background:Highlight; }
+}
+
+html[data-theme=light] .sidebar { background:rgb(247 249 252 / max(.78,var(--sidebar-opacity))); }
+.top-tools .tool-button,.top-tools .tool-button.add-main { color:#fff; filter:drop-shadow(0 1px 3px #0009); }
+html[data-accent=custom] .calendar-cell.selected { background:var(--accent); color:var(--accent-ink); }
+html[data-accent=custom] .calendar-tool-nav button[aria-current=page] { color:var(--accent); }
+html[data-accent=custom] .calendar-tool-nav button[aria-current=page]::before { background:var(--accent); }

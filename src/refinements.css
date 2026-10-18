@@ -1,0 +1,127 @@
+/* SPDX-License-Identifier: GPL-3.0-only
+   v0.3 — less chrome, predictable scrolling and transform-only interactions. */
+#clock-seconds{font-size:1em;font-weight:inherit;letter-spacing:inherit;opacity:1;padding-left:0;color:inherit}
+#clock-time,#clock-seconds{font-variant-numeric:tabular-nums}
+/* Never manufacture a white icon plate. The site's own pixels stay untouched. */
+.tile-link .tile-body:has(.site-visual.is-loaded),
+.folder-preview .mini-site:has(.site-visual.is-loaded),
+.folder-site:has(.site-visual.is-loaded){background:transparent!important;border:0;box-shadow:none!important;border-radius:0;overflow:visible}
+.site-visual.is-loaded{background:transparent;border:0;box-shadow:none;border-radius:0;overflow:visible}
+.site-visual>.site-favicon{width:92%;height:92%;max-width:100%;max-height:100%;object-fit:contain;image-rendering:auto;border:0;box-shadow:none;background:transparent}
+.tile-link[data-size="2x2"] .site-favicon,.tile-link[data-size="4x2"] .site-favicon{max-width:112px;max-height:112px}
+.mini-site .site-favicon{max-width:100%;max-height:100%}
+.engine-mark .site-favicon{width:100%;height:100%;max-width:100%;max-height:100%;padding:0}
+html[data-theme=dark] .tile-link .site-favicon{filter:drop-shadow(0 1px 2px rgb(230 243 255 / .20))}
+.tile-link:focus-within>.tile-label,.tile-link:hover>.tile-label,.tile-folder:focus-within>.tile-label,.tile-folder:hover>.tile-label{opacity:1}
+.tile-link>.tile-label,.tile-folder>.tile-label{max-width:100%;align-self:center}
+.tile-drag-handle{display:none!important}
+.tile{cursor:grab;touch-action:pan-y;user-select:none}
+.tile input,.tile textarea,.tile select,.tile [contenteditable]{user-select:text;cursor:auto;touch-action:auto}
+.tile button,.tile a{cursor:pointer}
+.editing .tile{touch-action:none}
+.tile:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:var(--radius)}
+/* The source remains in the layout as a moving gap. Neighbours use WAAPI FLIP. */
+body.is-dragging .tile,body.is-dragging .group-button{cursor:grabbing;transition:none;animation:none}
+body.is-dragging .tile.dragging{opacity:.16;outline:1px dashed var(--accent);outline-offset:1px}
+body.is-dragging .tile.dragging>.tile-body,body.is-dragging .tile.dragging>.tile-label{visibility:hidden}
+body.is-dragging .tile-body{transform:none!important;transition:none}
+body.is-dragging{cursor:grabbing;user-select:none}
+body.is-dragging .group-button.dragging{opacity:.2}
+.drag-ghost{opacity:.94;cursor:grabbing;pointer-events:none!important;transition:none!important;animation:none!important;filter:drop-shadow(0 12px 16px rgb(0 0 0 / .2));will-change:transform}
+.drag-ghost .tile-actions{display:none}
+.drag-ghost .tile-body{height:calc(100% - 22px)}
+.drag-ghost .tile-label{opacity:1;visibility:visible}
+.drop-inside{outline:2px solid var(--accent)!important;outline-offset:5px;border-radius:var(--radius)}
+/* Four actions hide together; the fifth, contextual eye only appears on hover/focus. */
+.top-tools{border:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:4px;gap:3px}
+.top-tools .toolbar-actions{display:flex;max-width:none;gap:5px;overflow:visible;opacity:1;visibility:visible;transition:opacity .16s ease}
+.top-tools .tool-button,.top-tools .tool-button.add-main{border:0!important;box-shadow:none;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--fg)}
+.top-tools .tool-button:hover{background:color-mix(in srgb,var(--fg) 9%,transparent);transform:none}
+.top-tools .tool-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top-tools .toolbar-mode{opacity:0;transition:opacity .16s;pointer-events:none}
+.top-tools:hover .toolbar-mode,.top-tools:focus-within .toolbar-mode{opacity:1;pointer-events:auto}
+.top-tools.auto-hide .toolbar-actions{max-width:none;opacity:0;visibility:visible;overflow:visible;pointer-events:none;transition-delay:.5s}
+.top-tools.auto-hide:hover .toolbar-actions,.top-tools.auto-hide:focus-within .toolbar-actions{max-width:none;opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
+.top-tools.auto-hide:not(:hover):not(:focus-within) .shortcuts-tooltip{display:none}
+/* Invisible scrollbars never disable scrolling. Wheel routing is in app.js. */
+.groups{min-height:0;overscroll-behavior:contain;scrollbar-width:none;-ms-overflow-style:none}
+.groups::-webkit-scrollbar{display:none;width:0;height:0}
+.group-button{flex-shrink:0}
+html.hide-content-scrollbar,html.hide-content-scrollbar body{scrollbar-width:none;-ms-overflow-style:none}
+html.hide-content-scrollbar::-webkit-scrollbar,html.hide-content-scrollbar body::-webkit-scrollbar{display:none;width:0;height:0}
+/* Stable quote position and enough bottom space for the last row to clear it. */
+main{padding-bottom:112px}
+.daily-quote{position:fixed;left:calc(var(--sidebar-width) + 24px);right:24px;bottom:max(24px,env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;margin:0;padding:10px 16px 2px;z-index:9;text-align:center;pointer-events:none;max-height:none;overflow:visible;line-height:1.5;text-wrap:balance}
+.daily-quote-content{position:relative;min-width:0;max-width:calc(100% - 272px);pointer-events:auto}
+.daily-quote-text{padding:4px 2px;max-width:100%;line-height:inherit;letter-spacing:inherit;text-shadow:inherit;text-wrap:balance;overflow-wrap:anywhere;user-select:text}
+.daily-quote-text:before{content:'「 ';opacity:.7}
+.daily-quote-text:after{content:' 」';opacity:.7}
+.daily-quote-text:hover{color:#fff}
+.daily-quote-text:disabled{opacity:1}
+.daily-quote-actions{position:absolute;left:100%;top:50%;display:flex;align-items:center;gap:2px;padding:4px 0 4px 10px;width:max-content;opacity:0;visibility:hidden;pointer-events:none;transform:translate(4px,-50%);transition:opacity .16s,transform .16s,visibility .16s}
+.daily-quote-content:hover .daily-quote-actions,.daily-quote-content:has(:focus-visible) .daily-quote-actions{opacity:1;visibility:visible;pointer-events:auto;transform:translate(0,-50%)}
+.daily-quote-actions>button,.daily-quote-actions>a{display:grid;place-items:center;width:28px;height:28px;padding:5px;border-radius:7px;color:inherit;background:rgba(15,23,32,.28);text-decoration:none;transition:background .16s,color .16s}
+.daily-quote-actions>button:hover,.daily-quote-actions>a:hover{background:rgba(255,255,255,.16);color:#fff}
+.daily-quote-actions .icon{width:16px;height:16px}
+.daily-quote-actions .is-copied{color:#b7e9d4}
+.daily-quote[data-quote-status=loading] [data-quote-refresh] .icon{animation:quote-spin 1s linear infinite}
+@keyframes quote-spin{to{transform:rotate(360deg)}}
+@media(hover:none){.daily-quote-actions{opacity:1;visibility:visible;pointer-events:auto;transform:translate(0,-50%)}}
+@media(max-width:600px){.daily-quote-content{display:flex;align-items:center;gap:6px;width:100%;max-width:100%}.daily-quote-text{flex:1;min-width:0}.daily-quote-actions,.daily-quote-content:hover .daily-quote-actions,.daily-quote-content:has(:focus-visible) .daily-quote-actions{position:static;flex-shrink:0;padding:0;transform:none}.daily-quote-actions>button,.daily-quote-actions>a{width:26px;height:28px}}
+@media(prefers-reduced-motion:reduce){.daily-quote-actions,.daily-quote-actions>button,.daily-quote-actions>a{transition:none}.daily-quote[data-quote-status=loading] [data-quote-refresh] .icon{animation:none}}
+html[data-sidebar-position=right] .daily-quote{left:24px;right:calc(var(--sidebar-width) + 24px)}
+html[data-navigation=top] .daily-quote,html[data-sidebar-visibility=hidden] .daily-quote,.minimal .daily-quote{left:24px;right:24px}
+.wallpaper-credit{max-width:33vw;bottom:8px;z-index:10}
+.folder-site{position:relative}
+.folder-grid{gap:24px 20px}
+.folder-item:focus-within{outline:1px solid var(--accent);outline-offset:5px;border-radius:12px}
+/* Wallpaper entry: no automatic list requests on page load. */
+.w-wallpaper{isolation:isolate}
+.wallpaper-widget-art{position:absolute;inset:0;background:radial-gradient(ellipse at 82% 14%,#f5ddab 0 9%,transparent 9.5%),linear-gradient(140deg,#629b97,#0d403a 70%)}
+.wallpaper-widget-art:after{content:"";position:absolute;inset:26% -10% -25%;background:linear-gradient(140deg,#679285,#134c49);clip-path:polygon(0 90%,30% 5%,49% 50%,68% 17%,100% 100%)}
+.wallpaper-widget-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wallpaper-launcher{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:6px;padding:20px;color:#fff;background:linear-gradient(transparent,rgba(8,31,30,.65));width:100%;text-align:left}
+.wallpaper-launcher strong{font-size:21px;font-weight:550;letter-spacing:.02em}
+.wallpaper-launcher>span{font-size:11px;opacity:.82}
+.wallpaper-launcher .wallpaper-eyebrow{font-size:9px;letter-spacing:.16em;margin-bottom:auto}
+.wallpaper-launch-arrow{position:absolute;right:18px;top:16px;font-size:23px!important}
+/* Gallery is one dialog, not nested dialogs. Only the content column scrolls. */
+.app-dialog.wallpaper-dialog{width:min(1040px,calc(100vw - 40px));max-height:min(800px,calc(100dvh - 48px));padding:0;overflow:hidden}
+.wallpaper-dialog #dialog-content{display:flex;flex-direction:column;height:min(730px,calc(100dvh - 50px));min-height:0}
+.wallpaper-dialog .dialog-head{flex:none;padding:22px 26px 18px}
+.wallpaper-browser{display:grid;grid-template-columns:180px minmax(0,1fr);min-height:0;flex:1;border-top:1px solid var(--panel-border)}
+.wallpaper-nav{padding:18px 10px 14px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--panel-border);min-height:0;overflow:auto;scrollbar-width:none}
+.wallpaper-nav button{padding:12px 13px;text-align:left;border-radius:11px;color:var(--muted);font-size:13px;flex-shrink:0}
+.wallpaper-nav button:hover{background:var(--panel-2);color:var(--fg)}
+.wallpaper-nav button[aria-selected=true]{background:var(--accent-soft);color:var(--fg);font-weight:600}
+.wallpaper-nav small{font-size:10px;letter-spacing:.06em;padding:18px 13px 6px;color:var(--muted);opacity:.7}
+.wallpaper-nav .wallpaper-parameters{margin-top:auto;border-top:1px solid var(--panel-border);border-radius:0;padding-top:20px}
+.wallpaper-content{min-height:0;overflow:auto;overscroll-behavior:contain;padding:24px 26px 32px}
+.wallpaper-content h3{font-size:19px;letter-spacing:-.03em;margin:0 0 10px;font-weight:550}
+.wallpaper-content .help-text{margin:6px 0 22px}
+.wallpaper-content .wallpaper-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.wallpaper-content .wallpaper-option{height:auto;aspect-ratio:16/10;border-radius:14px;box-shadow:none}
+.wallpaper-photo-card{border:1px solid var(--panel-border);border-radius:14px;overflow:hidden;background:var(--panel-2);position:relative}
+.wallpaper-photo-card>button{width:100%;display:block;padding:0;background:none}
+.wallpaper-photo-card img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;transition:transform .18s}
+.wallpaper-photo-card>button:hover img{transform:scale(1.035)}
+.wallpaper-photo-card>button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.wallpaper-photo-credit{padding:10px;display:flex;flex-direction:column;gap:4px;font-size:10px;line-height:1.5;color:var(--muted)}
+.wallpaper-photo-credit a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+.wallpaper-photo-credit a:hover{text-decoration:underline}
+.wallpaper-status{padding:12px 0;font-size:13px;color:var(--muted);line-height:1.7}
+.wallpaper-pagination{display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:12px;font-size:12px}
+.wallpaper-permission{margin:28px auto;padding:28px;max-width:440px;background:var(--panel-2);border-radius:18px;line-height:1.8}
+.wallpaper-external{padding:22px;border:1px solid var(--panel-border);border-radius:16px;background:var(--panel-2)}
+@media(max-width:650px){
+ .app-dialog.wallpaper-dialog{width:calc(100vw - 20px);max-height:calc(100dvh - 20px)}
+ .wallpaper-dialog #dialog-content{height:calc(100dvh - 22px)}
+ .wallpaper-browser{grid-template-columns:108px minmax(0,1fr)}
+ .wallpaper-nav{padding:12px 5px}.wallpaper-nav button{padding:12px 8px;font-size:11px}.wallpaper-nav small{padding:14px 8px 5px}
+ .wallpaper-content{padding:18px 12px}.wallpaper-content .wallpaper-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .wallpaper-permission{padding:16px}.wallpaper-photo-credit{font-size:9px;padding:7px}
+ .daily-quote{font-size:11px;bottom:max(22px,env(safe-area-inset-bottom));padding-left:2px;padding-right:2px}
+ .wallpaper-credit{max-width:80vw;font-size:9px;bottom:4px}
+}
+@media(prefers-reduced-motion:reduce){.wallpaper-photo-card img,.toolbar-mode,.toolbar-actions{transition:none!important}}
+body.reduce-effects .wallpaper-photo-card img{transition:none}

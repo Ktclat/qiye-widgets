@@ -1,0 +1,916 @@
+{
+  "schemaVersion": 5,
+  "updatedAt": 0,
+  "settings": {
+    "language": "auto",
+    "theme": "dark",
+    "wallpaper": "aurora",
+    "customWallpaper": null,
+    "customWallpaperType": "image",
+    "blur": 0,
+    "dim": 14,
+    "showSeconds": false,
+    "hour12": false,
+    "pinClock": false,
+    "pinSearch": false,
+    "minimal": false,
+    "openNewTab": true,
+    "searchNewTab": true,
+    "rememberGroup": true,
+    "scrollGroups": true,
+    "sidebarWheelMode": "scroll",
+    "hideScrollbar": false,
+    "hideEditorScrollbar": false,
+    "gridSize": 60,
+    "gap": 30,
+    "radius": 18,
+    "showLabels": true,
+    "clockSize": 70,
+    "sidebarWidth": 50,
+    "sidebarOpacity": 28,
+    "sidebarPosition": "left",
+    "navigationMode": "sidebar",
+    "sidebarVisibility": "always",
+    "sidebarLabels": true,
+    "useThemeColor": false,
+    "avatar": null,
+    "toolbarVisibility": "always",
+    "surfaceStyle": "glass",
+    "surfaceOpacity": 72,
+    "surfaceBlur": 14,
+    "reducedEffects": false,
+    "animateGroups": true,
+    "uiFont": "inter",
+    "uiScale": 100,
+    "windowSize": 100,
+    "settingsPresentation": "sidebar",
+    "showWallpaperCredit": true,
+    "clockWeight": 400,
+    "clockOffsetX": 0,
+    "clockOffsetY": 0,
+    "searchOffsetX": 0,
+    "searchOffsetY": 0,
+    "searchWidth": 600,
+    "searchHeight": 46,
+    "searchOpacity": 65,
+    "searchRadius": 23,
+    "showSearchHistory": false,
+    "showWeekday": true,
+    "showLunar": true,
+    "showWallpaperButton": true,
+    "iconShape": "original",
+    "iconBackdrop": "none",
+    "autoExtractIcons": true,
+    "iconOpacity": 100,
+    "labelSize": 12,
+    "labelColor": "#ffffff",
+    "clockColor": "#ffffff",
+    "desktopMaxWidth": 1350,
+    "themeColor": "#79d7b4",
+    "showClock": true,
+    "showDate": true,
+    "showSearch": true,
+    "showAddTile": false,
+    "searchEngine": "bing",
+    "customEngines": [],
+    "dailyWallpaper": false,
+    "quote": true,
+    "wallpaperApiEnabled": false,
+    "remoteWallpaper": null
+  },
+  "activeGroupId": "home",
+  "groups": [
+    {
+      "id": "home",
+      "name": "主页",
+      "icon": "home"
+    },
+    {
+      "id": "code",
+      "name": "编程",
+      "icon": "code"
+    },
+    {
+      "id": "design",
+      "name": "设计",
+      "icon": "palette"
+    },
+    {
+      "id": "work",
+      "name": "产品",
+      "icon": "briefcase"
+    },
+    {
+      "id": "ai",
+      "name": "AI",
+      "icon": "sparkles"
+    },
+    {
+      "id": "life",
+      "name": "生活",
+      "icon": "coffee"
+    }
+  ],
+  "items": [
+    {
+      "id": "weather-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "weather",
+      "title": "天气",
+      "size": "2x2",
+      "config": {
+        "city": {
+          "name": "香港",
+          "latitude": 22.32,
+          "longitude": 114.17
+        },
+        "enabled": false,
+        "unit": "celsius",
+        "source": "auto",
+        "fallback": true
+      },
+      "data": {}
+    },
+    {
+      "id": "calendar-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "calendar",
+      "title": "日历",
+      "size": "4x2",
+      "config": {
+        "weekStart": 0,
+        "showLunar": true,
+        "holidays": "CN"
+      },
+      "data": {
+        "events": []
+      }
+    },
+    {
+      "id": "memo-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "memo",
+      "title": "备忘录",
+      "size": "2x2",
+      "config": {},
+      "data": {
+        "entries": []
+      }
+    },
+    {
+      "id": "site-google",
+      "groupId": "home",
+      "type": "link",
+      "title": "Google",
+      "url": "https://www.google.com/",
+      "icon": "G",
+      "iconMode": "auto",
+      "color": "#FFFFFF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-bilibili",
+      "groupId": "home",
+      "type": "link",
+      "title": "哔哩哔哩",
+      "url": "https://www.bilibili.com/",
+      "icon": "哔",
+      "iconMode": "auto",
+      "color": "#F18CAD",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-github",
+      "groupId": "home",
+      "type": "link",
+      "title": "GitHub",
+      "url": "https://github.com/",
+      "icon": "github",
+      "iconMode": "auto",
+      "color": "#24292F",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-chatgpt",
+      "groupId": "home",
+      "type": "link",
+      "title": "ChatGPT",
+      "url": "https://chatgpt.com/",
+      "icon": "sparkles",
+      "iconMode": "auto",
+      "color": "#10A37F",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "wallpaper-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "wallpaper",
+      "title": "发现壁纸",
+      "size": "4x2",
+      "config": {},
+      "data": {}
+    },
+    {
+      "id": "notes-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "notes",
+      "title": "灵感便签",
+      "size": "2x2",
+      "config": {
+        "color": "yellow"
+      },
+      "data": {
+        "notes": "把忽然想到的事，留在这一页。\n\n试试拖动卡片，让它成为你的日常。"
+      }
+    },
+    {
+      "id": "todo-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "todo",
+      "title": "今日待办",
+      "size": "2x2",
+      "config": {},
+      "data": {
+        "todos": [
+          {
+            "id": "todo-explore",
+            "text": "换一张喜欢的壁纸",
+            "done": false
+          },
+          {
+            "id": "todo-create",
+            "text": "添加一个常用网站",
+            "done": false
+          },
+          {
+            "id": "todo-break",
+            "text": "给自己留一点休息时间",
+            "done": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "site-youtube",
+      "groupId": "home",
+      "type": "link",
+      "title": "YouTube",
+      "url": "https://www.youtube.com/",
+      "icon": "play",
+      "iconMode": "auto",
+      "color": "#F44349",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-zhihu",
+      "groupId": "home",
+      "type": "link",
+      "title": "知乎",
+      "url": "https://www.zhihu.com/",
+      "icon": "知",
+      "iconMode": "auto",
+      "color": "#1677FF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-douban",
+      "groupId": "home",
+      "type": "link",
+      "title": "豆瓣",
+      "url": "https://www.douban.com/",
+      "icon": "豆",
+      "iconMode": "auto",
+      "color": "#2DA854",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "site-notion",
+      "groupId": "home",
+      "type": "link",
+      "title": "Notion",
+      "url": "https://www.notion.so/",
+      "icon": "N",
+      "iconMode": "auto",
+      "color": "#F6F4F0",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "countdown-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "countdown",
+      "title": "下一份期待",
+      "size": "2x2",
+      "config": {
+        "title": "新年，新的期待",
+        "date": "2027-01-01"
+      },
+      "data": {}
+    },
+    {
+      "id": "focus-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "pomodoro",
+      "title": "番茄钟",
+      "size": "2x2",
+      "config": {
+        "focusMinutes": 25,
+        "shortBreakMinutes": 5,
+        "longBreakMinutes": 15,
+        "longBreakEvery": 4,
+        "dailyGoal": 8,
+        "sound": true
+      },
+      "data": {
+        "phase": "focus",
+        "status": "idle",
+        "duration": 1500,
+        "remaining": 1500,
+        "endAt": null,
+        "cycle": 0,
+        "task": "",
+        "sessions": []
+      }
+    },
+    {
+      "id": "workday-home",
+      "groupId": "home",
+      "type": "widget",
+      "widget": "workday",
+      "title": "下班倒计时",
+      "size": "2x2",
+      "config": {
+        "endTime": "18:00",
+        "payday": 10,
+        "workdays": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "data": {}
+    },
+    {
+      "id": "folder-tools",
+      "groupId": "home",
+      "type": "folder",
+      "title": "随手工具",
+      "icon": "folder",
+      "color": "#A6B1E1",
+      "size": "2x2"
+    },
+    {
+      "id": "tool-deepl",
+      "groupId": "home",
+      "type": "link",
+      "title": "DeepL",
+      "url": "https://www.deepl.com/translator",
+      "icon": "译",
+      "iconMode": "auto",
+      "color": "#234D68",
+      "size": "1x1",
+      "folderId": "folder-tools"
+    },
+    {
+      "id": "tool-figma",
+      "groupId": "home",
+      "type": "link",
+      "title": "Figma",
+      "url": "https://www.figma.com/",
+      "icon": "F",
+      "iconMode": "auto",
+      "color": "#A259FF",
+      "size": "1x1",
+      "folderId": "folder-tools"
+    },
+    {
+      "id": "tool-unsplash",
+      "groupId": "home",
+      "type": "link",
+      "title": "Unsplash",
+      "url": "https://unsplash.com/",
+      "icon": "U",
+      "iconMode": "auto",
+      "color": "#25282E",
+      "size": "1x1",
+      "folderId": "folder-tools"
+    },
+    {
+      "id": "tool-excalidraw",
+      "groupId": "home",
+      "type": "link",
+      "title": "Excalidraw",
+      "url": "https://excalidraw.com/",
+      "icon": "pen",
+      "iconMode": "auto",
+      "color": "#8D8AEF",
+      "size": "1x1",
+      "folderId": "folder-tools"
+    },
+    {
+      "id": "work-mail",
+      "groupId": "work",
+      "type": "link",
+      "title": "Gmail",
+      "url": "https://mail.google.com/",
+      "icon": "mail",
+      "iconMode": "auto",
+      "color": "#E96759",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "work-outlook",
+      "groupId": "work",
+      "type": "link",
+      "title": "Outlook",
+      "url": "https://outlook.live.com/",
+      "icon": "mail",
+      "iconMode": "auto",
+      "color": "#2483C6",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "work-calendar",
+      "groupId": "work",
+      "type": "link",
+      "title": "Google 日历",
+      "url": "https://calendar.google.com/",
+      "icon": "calendar",
+      "iconMode": "auto",
+      "color": "#4385EF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "work-drive",
+      "groupId": "work",
+      "type": "link",
+      "title": "Google 云端硬盘",
+      "url": "https://drive.google.com/",
+      "icon": "triangle",
+      "iconMode": "auto",
+      "color": "#2FAC75",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "todo-work",
+      "groupId": "work",
+      "type": "widget",
+      "widget": "todo",
+      "title": "工作清单",
+      "size": "2x2",
+      "config": {},
+      "data": {
+        "todos": []
+      }
+    },
+    {
+      "id": "focus-work",
+      "groupId": "work",
+      "type": "widget",
+      "widget": "pomodoro",
+      "title": "番茄钟",
+      "size": "2x2",
+      "config": {
+        "focusMinutes": 25,
+        "shortBreakMinutes": 5,
+        "longBreakMinutes": 15,
+        "longBreakEvery": 4,
+        "dailyGoal": 8,
+        "sound": true
+      },
+      "data": {
+        "phase": "focus",
+        "status": "idle",
+        "duration": 1500,
+        "remaining": 1500,
+        "endAt": null,
+        "cycle": 0,
+        "task": "",
+        "sessions": []
+      }
+    },
+    {
+      "id": "code-mdn",
+      "groupId": "code",
+      "type": "link",
+      "title": "MDN",
+      "url": "https://developer.mozilla.org/zh-CN/",
+      "icon": "M",
+      "iconMode": "auto",
+      "color": "#242933",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "code-github",
+      "groupId": "code",
+      "type": "link",
+      "title": "GitHub",
+      "url": "https://github.com/",
+      "icon": "github",
+      "iconMode": "auto",
+      "color": "#24292F",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "code-stack",
+      "groupId": "code",
+      "type": "link",
+      "title": "Stack Overflow",
+      "url": "https://stackoverflow.com/",
+      "icon": "code",
+      "iconMode": "auto",
+      "color": "#EF8A38",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "code-npm",
+      "groupId": "code",
+      "type": "link",
+      "title": "npm",
+      "url": "https://www.npmjs.com/",
+      "icon": "npm",
+      "iconMode": "auto",
+      "color": "#CB3837",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "notes-code",
+      "groupId": "code",
+      "type": "widget",
+      "widget": "notes",
+      "title": "开发随记",
+      "size": "2x2",
+      "config": {
+        "color": "mint"
+      },
+      "data": {
+        "notes": ""
+      }
+    },
+    {
+      "id": "clock-code",
+      "groupId": "code",
+      "type": "widget",
+      "widget": "clock",
+      "title": "世界时钟",
+      "size": "2x2",
+      "config": {
+        "timeZone": "America/Los_Angeles",
+        "label": "旧金山"
+      },
+      "data": {}
+    },
+    {
+      "id": "design-figma",
+      "groupId": "design",
+      "type": "link",
+      "title": "Figma",
+      "url": "https://www.figma.com/",
+      "icon": "F",
+      "iconMode": "auto",
+      "color": "#A259FF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "design-dribbble",
+      "groupId": "design",
+      "type": "link",
+      "title": "Dribbble",
+      "url": "https://dribbble.com/",
+      "icon": "D",
+      "iconMode": "auto",
+      "color": "#EA4C89",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "design-behance",
+      "groupId": "design",
+      "type": "link",
+      "title": "Behance",
+      "url": "https://www.behance.net/",
+      "icon": "Bē",
+      "iconMode": "auto",
+      "color": "#1769FF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "design-unsplash",
+      "groupId": "design",
+      "type": "link",
+      "title": "Unsplash",
+      "url": "https://unsplash.com/",
+      "icon": "U",
+      "iconMode": "auto",
+      "color": "#25282E",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "design-excalidraw",
+      "groupId": "design",
+      "type": "link",
+      "title": "Excalidraw",
+      "url": "https://excalidraw.com/",
+      "icon": "pen",
+      "iconMode": "auto",
+      "color": "#8D8AEF",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "notes-design",
+      "groupId": "design",
+      "type": "widget",
+      "widget": "notes",
+      "title": "创意手记",
+      "size": "2x2",
+      "config": {
+        "color": "pink"
+      },
+      "data": {
+        "notes": ""
+      }
+    },
+    {
+      "id": "ai-chatgpt",
+      "groupId": "ai",
+      "type": "link",
+      "title": "ChatGPT",
+      "url": "https://chatgpt.com/",
+      "icon": "sparkles",
+      "iconMode": "auto",
+      "color": "#10A37F",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "ai-claude",
+      "groupId": "ai",
+      "type": "link",
+      "title": "Claude",
+      "url": "https://claude.ai/",
+      "icon": "C",
+      "iconMode": "auto",
+      "color": "#D97757",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "ai-perplexity",
+      "groupId": "ai",
+      "type": "link",
+      "title": "Perplexity",
+      "url": "https://www.perplexity.ai/",
+      "icon": "P",
+      "iconMode": "auto",
+      "color": "#20808D",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "ai-deepseek",
+      "groupId": "ai",
+      "type": "link",
+      "title": "DeepSeek",
+      "url": "https://chat.deepseek.com/",
+      "icon": "D",
+      "iconMode": "auto",
+      "color": "#4D6BFE",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "ai-huggingface",
+      "groupId": "ai",
+      "type": "link",
+      "title": "Hugging Face",
+      "url": "https://huggingface.co/",
+      "icon": "🤗",
+      "iconMode": "auto",
+      "color": "#FFD21E",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "notes-ai",
+      "groupId": "ai",
+      "type": "widget",
+      "widget": "notes",
+      "title": "提示词手记",
+      "size": "2x2",
+      "config": {
+        "color": "mint"
+      },
+      "data": {
+        "notes": ""
+      }
+    },
+    {
+      "id": "life-music",
+      "groupId": "life",
+      "type": "link",
+      "title": "网易云音乐",
+      "url": "https://music.163.com/",
+      "icon": "music",
+      "iconMode": "auto",
+      "color": "#EB5757",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "life-spotify",
+      "groupId": "life",
+      "type": "link",
+      "title": "Spotify",
+      "url": "https://open.spotify.com/",
+      "icon": "music",
+      "iconMode": "auto",
+      "color": "#1DB954",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "life-map",
+      "groupId": "life",
+      "type": "link",
+      "title": "高德地图",
+      "url": "https://www.amap.com/",
+      "icon": "map",
+      "iconMode": "auto",
+      "color": "#4D90FE",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "life-douban",
+      "groupId": "life",
+      "type": "link",
+      "title": "豆瓣",
+      "url": "https://www.douban.com/",
+      "icon": "豆",
+      "iconMode": "auto",
+      "color": "#2DA854",
+      "size": "1x1",
+      "folderId": null
+    },
+    {
+      "id": "habit-life",
+      "groupId": "life",
+      "type": "widget",
+      "widget": "habit",
+      "title": "小习惯",
+      "size": "2x2",
+      "config": {},
+      "data": {
+        "habits": [
+          {
+            "id": "habit-water",
+            "name": "好好喝水",
+            "dates": []
+          },
+          {
+            "id": "habit-read",
+            "name": "读十分钟书",
+            "dates": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "quote-life",
+      "groupId": "life",
+      "type": "widget",
+      "widget": "quote",
+      "title": "留一点空白",
+      "size": "2x2",
+      "config": {
+        "text": "",
+        "author": "",
+        "quoteIndex": 0
+      },
+      "data": {}
+    },
+    {
+      "id": "calculator-life",
+      "groupId": "life",
+      "type": "widget",
+      "widget": "converter",
+      "title": "换算器",
+      "size": "2x2",
+      "config": {},
+      "data": {
+        "category": "calculator",
+        "precision": 6,
+        "online": false,
+        "pairs": {
+          "length": [
+            "m",
+            "cm"
+          ],
+          "area": [
+            "m2",
+            "km2"
+          ],
+          "mass": [
+            "kg",
+            "g"
+          ],
+          "volume": [
+            "l",
+            "ml"
+          ],
+          "temperature": [
+            "c",
+            "f"
+          ],
+          "time": [
+            "s",
+            "min"
+          ],
+          "speed": [
+            "kmh",
+            "ms"
+          ],
+          "angle": [
+            "deg",
+            "rad"
+          ],
+          "force": [
+            "n",
+            "kn"
+          ],
+          "pressure": [
+            "pa",
+            "kpa"
+          ],
+          "energy": [
+            "j",
+            "kj"
+          ],
+          "power": [
+            "w",
+            "kw"
+          ],
+          "data": [
+            "b",
+            "kb"
+          ],
+          "frequency": [
+            "hz",
+            "khz"
+          ],
+          "currency": [
+            "CNY",
+            "USD"
+          ]
+        },
+        "radix": {
+          "input": "255",
+          "base": 10,
+          "targets": [
+            2,
+            8,
+            10,
+            16
+          ],
+          "precision": 32,
+          "uppercase": true,
+          "groupDigits": false,
+          "prefixes": false,
+          "mode": "number",
+          "bits": 32,
+          "inputKind": "value",
+          "padBits": true
+        }
+      }
+    }
+  ]
+}
