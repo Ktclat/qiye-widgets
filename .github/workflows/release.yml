@@ -36,6 +36,7 @@ jobs:
         run: |
           python tests/runtime-e2e.py
           python tests/cache-e2e.py
+          python tests/view-switch-e2e.py
           python tests/window-e2e.py
       - uses: actions/upload-artifact@v4
         with:

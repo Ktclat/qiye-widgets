@@ -85,3 +85,14 @@
 技术依据：[MDN min-height](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/min-height) 用于分配 flex/grid 可滚动区域；[MDN color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/color-scheme) 用于让原生表单、滚动条跟随深浅主题。采用内部滚动和按内容显隐，不缩放整个窗口、不强行隐藏溢出的操作。
 
 验证入口：`tests/window-e2e.py` 在真实 API v2 MessageChannel 中覆盖上述三种窗口尺寸、深浅主题、无横向溢出、首屏主要操作、鼠标/键盘焦点、计时重新打开、时长保存、打卡保存/跨日/删除撤销、编码/摘要/动态选项及窄窗口转换。截图与报告在 `output/playwright/windows/`，并与 `tests/runtime-e2e.py` 的 19 个组件、五种卡片尺寸、两种主题回归一起执行。主程序无需随本次组件升版，网站更新通过组件源获取 1.0.2，已经添加的组件仍由用户在来源详情中执行更新。
+
+
+## 1.0.3 复用已运行卡片与加载审阅
+
+2026-10-18：官方组件在 API v2 ready 消息中声明 `features: ['view-switch']`，新版宿主可将同一 iframe 从卡片保留移动到窗口再返回。收到专用端口的 `{type:'view',id,environment}` 时先等待当前视图保存并清理绑定，再更换 mode、尺寸及环境并重新渲染，最后返回 `{type:'view-ready',id,error?}`。保存失败会返回错误，不静默丢弃草稿；切换后的视图重新绑定交互。旧宿主忽略可选能力后仍可按原初始化协议运行，无需同时发布新的组件 API 大版本。
+
+复用的是已经加载、解析和初始化的本地内存：没有第二次页面导航或 runtime/styles 请求。全套组件仍留在独立仓库。编码、文件和图片工具的临时编辑内容随视图重建清除；便签、打卡等已保存记录及运行番茄钟的截止时间保留。窗口与五种卡片尺寸继续采用既有圆角、46px 标题栏和各自的功能布局。
+
+研究来源与取舍：[Chrome 保留移动示例](https://developer.chrome.com/blog/movebefore-api)、[MDN moveBefore](https://developer.mozilla.org/en-US/docs/Web/API/Element/moveBefore)、[V8 代码缓存](https://v8.dev/blog/code-caching-for-devs)、[MDN HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[Chrome credentialless](https://developer.chrome.com/blog/iframe-credentialless)、[WICG 隔离说明](https://wicg.github.io/anonymous-iframe/)、[GoogleChromeLabs quicklink](https://github.com/GoogleChromeLabs/quicklink)。HTTP 缓存与 iframe 存储隔离不是同一个机制；真实 Chromium 测试中刷新后仍有 JS/CSS 缓存命中。共享版本资源已经减少重复传输，本次继续消除重复启动，不为了缓存而放开同源或降低宿主 CSP。首次载入或外部数据请求仍可能等待，浏览器缓存不等于永久离线安装包。
+
+验证：`tests/view-switch-e2e.py` 不拦截资源请求，遍历 19 个组件的深浅主题、宽窄窗口往返与番茄钟五种卡片尺寸，断言相同页面只初始化一次、切换不新增资源请求；检查番茄钟、习惯数据及编码临时输入。报告分别记录视图切换耗时及刷新/同上下文新标签页资源计数。`tests/runtime-e2e.py` 和 `tests/window-e2e.py` 继续覆盖五种尺寸、布局、持久化和日期时间行为。新旧协议、真实 MV3、来源停用、导航撤销及保存失败恢复在主程序仓库验证。

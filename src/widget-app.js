@@ -100,7 +100,20 @@ document.addEventListener('keydown',async event=>{if(event.key==='Escape'&&!even
 window.addEventListener('pagehide',()=>{cleanup();});
 environment(init.environment);render();
 setInterval(()=>refreshLiveWidgets(document.getElementById('widget-root'),state),1000);
-bridge.port.postMessage({type:'ready',version:2});
+// The host can move this initialized frame between its card and window slots.
+// Every transition disposes the previous view and confirms pending saves. The
+// fresh render clears transient editors (codec/files) while keeping saved data.
+let switching=false;
+bridge.onView=async message=>{
+ if(switching||!['card','window'].includes(message.environment?.mode))throw new Error('Invalid view transition');
+ switching=true;
+ try{
+  await flush();
+  Object.assign(init.environment,message.environment);
+  environment(init.environment);render();
+ }catch(error){render();throw error;}finally{switching=false;}
+};
+bridge.port.postMessage({type:'ready',version:2,features:['view-switch']});
 
 async function showSettings(){if(await cleanup()===false){toast(t('内容尚未保存，重新打开组件可继续编辑。'));return;}const root=document.getElementById('widget-root');root.inert=false;root.innerHTML=widgetSettings(item);cleanup=bindWidgetSettings(root,item,host,render);}
 
