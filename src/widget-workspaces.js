@@ -65,6 +65,7 @@ function tools(item) {
 
 export function utilityWorkspace(item,state) {
   if(LIFE_WIDGETS.includes(item.widget))return lifeWorkspace(item,state);
+  if(item.widget==='todo')return `<div class="utility-app todo-workspace" data-utility-type="todo">${workspaceHeader(item)}<div class="todo-workspace-body">${tools(item)}<section class="todo-workspace-list widget-inner w-todo" data-widget="todo" data-widget-id="${e(item.id)}">${renderWidgetContent(item,state)}</section></div></div>`;
   const content=item.widget==='countdown'?countdownContent(item):item.widget==='workday'?workdayContent(item):renderWidgetContent(item,state);
   return `<div class="utility-app" data-utility-type="${item.widget}">${workspaceHeader(item)}<div class="utility-layout"><section class="utility-main"><section class="utility-panel widget-inner w-${item.widget}" data-widget="${item.widget}" data-widget-id="${e(item.id)}" data-widget-day="${localDateKey()}">${content}</section>${tools(item)}</section>${utilitySettings(item)}</div></div>`;
 }
@@ -86,7 +87,7 @@ export function bindUtilityWorkspace(root,item,host) {
   };
   const timer=setInterval(refresh,1000);refresh();
   let saving=false;
-  form.addEventListener('submit',async event=>{
+  form?.addEventListener('submit',async event=>{
     event.preventDefault();event.stopPropagation();if(saving)return;
     saving=true;form.querySelector('[type=submit]').disabled=true;
     try{await host.saveSettings(item.id,readUtilitySettings(item,new FormData(form)),initial);if(root.isConnected)host.openDialog('widget-detail',{item:latest()});}

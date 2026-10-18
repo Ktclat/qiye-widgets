@@ -22,7 +22,7 @@ export function converterCard(item) {
 }
 
 export function converterWorkspace(item) {
-  return `<div class="cv-app"><header class="cv-header"><div class="cv-brand">${icon('converter')}<h2 id="dialog-title" tabindex="-1">${e(item.title)}</h2></div><label class="cv-search">${icon('search')}<input type="search" data-cv-search placeholder="${t('搜索换算…')}" aria-label="${t('搜索换算类型或单位')}"></label><button class="widget-app-button" type="button" data-cv-action="settings" aria-label="${t('换算设置')}" title="${t('换算设置')}" aria-expanded="false" aria-controls="cv-settings">${icon('sliders')}</button>${windowControls()}</header>
+  return `<div class="cv-app"><header class="cv-header"><div class="cv-brand">${icon('converter')}<h2 id="dialog-title" tabindex="-1">${e(item.title)}</h2></div><label class="cv-search widget-search">${icon('search')}<input type="search" data-cv-search placeholder="${t('搜索换算…')}" aria-label="${t('搜索换算类型或单位')}"></label><button class="widget-app-button" type="button" data-cv-action="settings" aria-label="${t('换算设置')}" title="${t('换算设置')}" aria-expanded="false" aria-controls="cv-settings">${icon('sliders')}</button>${windowControls()}</header>
     <div class="cv-settings" id="cv-settings" hidden><label>${t('最大小数位数')}<select data-cv-precision>${Array.from({length:13},(_,n) => `<option value="${n}">${n}</option>`).join('')}</select></label><label><input type="checkbox" data-cv-online>${t('允许联网更新汇率')}</label><p>${t('只发送币种，不发送金额。其余计算均在本机完成。')}</p></div>
     <div class="cv-layout"><nav class="cv-nav" aria-label="${t('换算分类')}">${Object.entries(groups).map(([group,label]) => `<section data-cv-group="${group}"><h3>${t(label)}</h3>${CONVERTER_CATEGORIES.filter(c => c.group === group).map(c => `<button type="button" data-cv-category="${c.id}" aria-pressed="false"><span class="cv-nav-mark" aria-hidden="true">${e(c.mark)}</span><span>${e(converterLabel(c))}</span></button>`).join('')}</section>`).join('')}<p class="cv-nav-empty" hidden>${t('没有匹配的换算')}</p></nav>
     <section class="cv-main"><label class="cv-mobile-category">${t('换算分类')}<select data-cv-select>${CONVERTER_CATEGORIES.map(c => `<option value="${c.id}">${e(converterLabel(c))}</option>`).join('')}</select></label><div data-cv-panel></div><p class="cv-status" id="cv-status" role="status" aria-live="polite"></p></section></div>
@@ -79,7 +79,7 @@ export function bindConverterWorkspace(root, item, host) {
   const session = {values:{}, expression:'', history:[], calculated:false, bmi:{height:'',weight:'',system:'metric'}, dateMode:'difference', dates:{}, timestamp:null};
   const now = new Date(), today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const status = message => { q('#cv-status').textContent = message; };
-  const feedback = message => { clearTimeout(noticeTimer); q('[data-cv-feedback]').textContent = message; noticeTimer = setTimeout(() => { if(active) q('[data-cv-feedback]').textContent = ''; },3500); };
+  const feedback = message => { clearTimeout(noticeTimer); q('[data-cv-feedback]').textContent = message; noticeTimer = setTimeout(() => { if(active) q('[data-cv-feedback]').textContent = ''; },3000); };
   const format = value => formatConversion(value, data.precision);
   const valueState = () => session.values[data.category] ||= {text:'1',side:0};
 

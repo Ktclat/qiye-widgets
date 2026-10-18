@@ -40,7 +40,15 @@ export function hotsearchRequestUrl(config, source, now = Date.now()) {
   return base === HOTSEARCH_API ? `${base}/api/v1/misc/hotboard?type=${source.id}` : `${base}/${source.id}`;
 }
 
-export function createHotsearchClient({fetcher = fetchPublicJson, storage = () => globalThis.localStorage, now = () => Date.now()} = {}) {
+async function fetchHotboard(url, options) {
+ const bridge=globalThis.qiyeBridge,parsed=new URL(url);
+ if(bridge?.init.environment.hostFeatures?.includes('hotboard')&&parsed.origin===HOTSEARCH_API&&parsed.pathname==='/api/v1/misc/hotboard'){
+  if(options.signal?.aborted)throw new Error('Aborted');
+  return bridge.call('hotboard',{platform:parsed.searchParams.get('type')});
+ }
+ return fetchPublicJson(url,options);
+}
+export function createHotsearchClient({fetcher = fetchHotboard, storage = () => globalThis.localStorage, now = () => Date.now()} = {}) {
   const states = new Map(), requests = new Map();
   const keyOf = (config, id) => (hotsearchSource(id)?.github ? 'github' : hotsearchApiBase(config.apiBase)) + ':' + id;
   function read(key) {
@@ -85,8 +93,8 @@ export function createHotsearchClient({fetcher = fetchPublicJson, storage = () =
           if (controller.signal.aborted) return;
           current.data = parseHotsearchResponse(raw,source,now());
           current.status = 'success'; current.error = ''; cache(key,current.data);
-        } catch {
-          if (!controller.signal.aborted) { current.status = 'error'; current.error = t('暂时无法获取榜单，请稍后重试或打开平台。'); }
+        } catch (error) {
+          if (!controller.signal.aborted) { current.status = 'error'; current.error = t('暂时无法获取榜单，请稍后重试或打开平台。')+' '+String(error?.message||'').slice(0,160); }
         } finally {
           if (requests.get(key) === ownJob) {
             if (controller.signal.aborted) { current.status = 'idle'; current.lastAttempt = 0; }

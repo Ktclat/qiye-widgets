@@ -129,7 +129,7 @@ function validateBuiltinConfig(widgetType, raw, path) {
     keys(raw,['manifest','source'],path);
     return {manifest:validateCommunityManifest(raw.manifest),source:publicHttpsUrl(string(raw.source,path+'.source',2048))};
   }
-  const optional = widgetType==='workday'?['startTime','style','background','font','showPayday','showFriday','showEarnings','dailyIncome']:widgetType==='clock'?['cities']:[];
+  const optional = widgetType==='workday'?['startTime','style','background','font','showPayday','showFriday','showEarnings','dailyIncome']:widgetType==='clock'?['cities','columns']:[];
   const v = keys(raw, [...Object.keys(builtinConfig[widgetType] || {}),...optional], path);
   const out = {};
   if (widgetType === 'bookmarks') out.source = enumeration(v.source, ['local','browser'], `${path}.source`);
@@ -167,6 +167,7 @@ function validateBuiltinConfig(widgetType, raw, path) {
     unique(out.workdays, `${path}.workdays`);
   }
   if (widgetType === 'clock') {
+    if(v.columns!==undefined)out.columns=enumeration(v.columns,[1,2,3],`${path}.columns`);
     if(v.cities!==undefined)out.cities=validateClockCities(v.cities,`${path}.cities`);
     out.timeZone = string(v.timeZone, `${path}.timeZone`, 80);
     try { new Intl.DateTimeFormat('en', { timeZone: out.timeZone }).format(); } catch { invalid(`${path}.timeZone`, t("不是有效时区")); }

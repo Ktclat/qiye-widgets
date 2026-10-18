@@ -106,3 +106,11 @@ test('switching back before an aborted request settles starts a new request',asy
   const first=client.request(c,'zhihu',{signal:abort.signal});abort.abort();const second=client.request(c,'zhihu');
   assert.equal(callbacks.length,2);callbacks[1](payload('new'));await second;callbacks[0](payload('old'));await first;assert.equal(client.state(c,'zhihu').data.items[0].title,'new');
 });
+
+
+test('opaque-frame default hotboard requests use the advertised host transport',async()=>{
+ const previous=globalThis.qiyeBridge,calls=[];
+ globalThis.qiyeBridge={init:{environment:{hostFeatures:['hotboard']}},call:async(method,params)=>{calls.push({method,params});return payload('Host public board');}};
+ try{const client=createHotsearchClient({storage:()=>memoryStorage()});await client.request(config(),'zhihu');assert.equal(client.state(config(),'zhihu').data.items[0].title,'Host public board');assert.deepEqual(calls,[{method:'hotboard',params:{platform:'zhihu'}}]);}
+ finally{if(previous===undefined)delete globalThis.qiyeBridge;else globalThis.qiyeBridge=previous;}
+});

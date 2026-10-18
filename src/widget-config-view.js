@@ -28,6 +28,7 @@ export function widgetSettings(item) {
  else if(type==='notes') content += selectField('color',t("便签颜色"),c.color,[{value:'yellow',label:t("奶油黄")},{value:'pink',label:t("浅樱粉")},{value:'mint',label:t("薄荷绿")}]);
  else if(definition && !definition.builtin) content += renderExtensionSettings(item);
  else content += `<p class="help-text">${t("直接在卡片中使用这个组件。右键卡片可以调整尺寸或位置。")}</p>`;
+ if(type==='clock')content+=selectField('columns',t('城市布局'),c.columns||2,[1,2,3].map(n=>({value:n,label:t('每行 {count} 个',{count:n})})));
  content += selectField('size',t("卡片尺寸"),item.size || '2x2',(type==='community'?c.manifest.sizes:definition?.sizes || TILE_SIZES).map(value=>({value,label:sizeLabel(value)})));
  return dialogHeader(`${t("设置{v0}", {v0: item.title})}`,t("修改后会保存到当前浏览器。")) + `<div class="plugin-config-body"><form id="widget-form" data-id="${esc(item.id)}" data-type="${esc(type)}">${content}${formActions()}</form></div>`;
 }
@@ -44,7 +45,7 @@ export function bindWidgetSettings(root,item,host,back){
    if(type==='focus'){const duration=Number(value('duration'));if(!Number.isInteger(duration)||duration<1||duration>180)throw new Error(t("专注时长需为 1–180 分钟。"));item.data.focus={duration,remaining:duration*60,endAt:null,running:false};}
    if(type==='pomodoro'){item.config=validatePomodoroConfig(readPomodoroSettings(data));item.data=configurePomodoro(item.data,item.config);}
    if(type==='workday'){c.endTime=value('endTime');c.payday=Number(value('payday'));c.workdays=data.getAll('workdays').map(Number);}
-   if(type==='clock'){c.timeZone=value('timeZone');c.label=value('label');}
+   if(type==='clock'){c.timeZone=value('timeZone');c.label=value('label');c.columns=Number(value('columns'));}
    if(type==='quote'){c.text=value('text');c.author=value('author');}
    if(type==='notes')c.color=value('color');
    if(!getWidgetDefinition(type).builtin)item.config=readExtensionSettings(type,data,c);

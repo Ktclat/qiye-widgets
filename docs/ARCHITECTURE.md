@@ -96,3 +96,15 @@
 研究来源与取舍：[Chrome 保留移动示例](https://developer.chrome.com/blog/movebefore-api)、[MDN moveBefore](https://developer.mozilla.org/en-US/docs/Web/API/Element/moveBefore)、[V8 代码缓存](https://v8.dev/blog/code-caching-for-devs)、[MDN HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching)、[Chrome credentialless](https://developer.chrome.com/blog/iframe-credentialless)、[WICG 隔离说明](https://wicg.github.io/anonymous-iframe/)、[GoogleChromeLabs quicklink](https://github.com/GoogleChromeLabs/quicklink)。HTTP 缓存与 iframe 存储隔离不是同一个机制；真实 Chromium 测试中刷新后仍有 JS/CSS 缓存命中。共享版本资源已经减少重复传输，本次继续消除重复启动，不为了缓存而放开同源或降低宿主 CSP。首次载入或外部数据请求仍可能等待，浏览器缓存不等于永久离线安装包。
 
 验证：`tests/view-switch-e2e.py` 不拦截资源请求，遍历 19 个组件的深浅主题、宽窄窗口往返与番茄钟五种卡片尺寸，断言相同页面只初始化一次、切换不新增资源请求；检查番茄钟、习惯数据及编码临时输入。报告分别记录视图切换耗时及刷新/同上下文新标签页资源计数。`tests/runtime-e2e.py` 和 `tests/window-e2e.py` 继续覆盖五种尺寸、布局、持久化和日期时间行为。新旧协议、真实 MV3、来源停用、导航撤销及保存失败恢复在主程序仓库验证。
+
+
+## 可选交互与热榜协议（宿主 0.10.5）
+
+`environment.hostFeatures` 包含 `interactions`、`commands`、`hotboard`；旧宿主可没有该字段，组件应先检测。
+
+- `ready` 可附 `contextMenu: [{id,label,icon}]`，最多 8 项，命令 id 最多 40 字符，标签最多 60 字符。宿主转义标签，仅接受已知图标。
+- 卡片可发 `{type:'interaction', action:'contextmenu'|'pointerdown'|'pointermove'|'pointerup'|'pointercancel', x, y, pointerId, pointerType, buttons}`。坐标为 frame 视口坐标；宿主按实例绑定的 frame 换算，并只在活动卡片且非预览时处理。
+- 菜单命令随窗口初始化/视图切换的 `environment.command` 传入；宿主也可发送 `{type:'command',command}`（例如 API 授权后的刷新）。组件只执行自身定义的命令。
+- `call('hotboard',{platform})` 仅访问 `https://uapis.cn/api/v1/misc/hotboard?type=...` 的固定平台集合，返回公开 JSON。不接收插件 URL 或自定义请求头，凭据始终省略，限制 1 MiB、12 秒、3 秒合并。预览与失效会话拒绝访问。扩展需由标题栏按钮主动申请 `https://uapis.cn/*`，不会在初始化时弹权限请求。普通 iframe 网络访问仍遵循 CORS。
+
+研究来源和视觉决策见 [组件修复记录](WIDGETS.md)。已安装组件仍固定版本；在组件源详情检查更新并“更新已添加的组件”后才使用新清单。

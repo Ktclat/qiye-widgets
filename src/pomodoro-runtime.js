@@ -69,7 +69,8 @@ export function bindPomodoro(container, host) {
   const controller = new AbortController(), options = { signal: controller.signal };
   const roots = () => [...container.querySelectorAll('[data-widget="pomodoro"]')];
   let settingsBase = JSON.stringify(roots().length === 1 ? host.getState().items.find(entry => entry.id === roots()[0].dataset.widgetId)?.config : null);
-  const feedback = message => { const node = container.querySelector('.pomo-feedback'); if (node) node.textContent = message; };
+  let feedbackTimer;
+  const feedback = message => {clearTimeout(feedbackTimer);const node=container.querySelector('.pomo-feedback');if(node){node.textContent=message;if(message)feedbackTimer=setTimeout(()=>{node.textContent='';},3000);}};
   function refresh() {
     for (const root of roots()) {
       const item = host.getState().items.find(entry => entry.id === root.dataset.widgetId && entry.widget === 'pomodoro');
@@ -169,5 +170,5 @@ export function bindPomodoro(container, host) {
   }, options);
   globalThis.addEventListener?.('visibilitychange', tick, options);
   const timer = setInterval(tick, 1000); tick();
-  return () => { controller.abort(); clearInterval(timer); observers.delete(refresh); };
+  return () => { controller.abort(); clearInterval(timer); clearTimeout(feedbackTimer); observers.delete(refresh); };
 }

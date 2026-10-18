@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-const paths = {
+export const iconPaths = {
  converter:'<path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/>',
  mapPin:'<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
  layers:'<path d="m12 3 10 5-10 5L2 8Zm-9 9 9 5 9-5M3 16l9 5 9-5"/>',
@@ -54,7 +54,7 @@ const paths = {
  ai: '<path d="m12 2 2.8 7.2L22 12l-7.2 2.8L12 22l-2.8-7.2L2 12l7.2-2.8z"/>',
  game: '<path d="M7 7h10c3 0 5 10 3 12-1 1-4-2-5-3H9c-1 1-4 4-5 3C2 17 4 7 7 7Z"/><path d="M8 10v5m-2.5-2.5h5M16 11h.01M18 14h.01"/>',
  plus:'<path d="M12 5v14M5 12h14"/>',
- settings:'<path d="m9 3-1 3-3 1-2 3 2 2-1 4 3 2 3-1 2 3 4-1 1-3 3-1 1-4-3-2V5l-4-2-2 2z"/><circle cx="12" cy="12" r="3"/>',
+ settings:'<path d="M10 3h4l.6 2.5 1.5.9 2.5-.8 2 3.5-1.9 1.8v1.8l1.9 1.8-2 3.5-2.5-.8-1.5.9L14 21h-4l-.6-2.5-1.5-.9-2.5.8-2-3.5 1.9-1.8v-1.8L3.4 9.5l2-3.5 2.5.8 1.5-.9L10 3Z"/><circle cx="12" cy="12" r="3"/>',
  search:'<circle cx="10.8" cy="10.8" r="7"/><path d="m16 16 5 5"/>',
  wallpaper:'<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5"/><path d="m21 16-6-6-7 8-3-3-2 2"/>',
  edit:'<path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14z"/>',
@@ -83,5 +83,5 @@ const paths = {
  move:'<path d="M12 2v20M2 12h20m-14-6 4-4 4 4m-10 2-4 4 4 4m12-8 4 4-4 4m-10 2 4 4 4-4"/>',
  coffee:'<path d="M4 8h12v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zm12 1h2a3 3 0 0 1 0 6h-2M7 2v3m5-3v3"/>'
 };
-export function icon(name, cls='') { return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.globe}</svg>`; }
-export const iconNames = Object.keys(paths);
+export function icon(name, cls='') { return `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name] || iconPaths.globe}</svg>`; }
+export const iconNames = Object.keys(iconPaths);

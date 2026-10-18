@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
+import { iconPaths } from './icons.js';
 import { calculateArithmetic } from './arithmetic.js';
 import { converterCard } from './converter-view.js';
 import { codecCard } from './codec-workspace.js';
@@ -52,7 +53,7 @@ export function escapeHtml(value = '') {
 
 const icons = {
   code: '<path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/>',
-  settings: '<path d="m9.5 4 .5-2h4l.5 2 2 .9 1.8-.6 2 3.4-1.3 1.5v2.4l1.3 1.5-2 3.4-1.8-.6-2 .9-.5 2h-4l-.5-2-2-.9-1.8.6-2-3.4L4 11.6V9.2L2.7 7.7l2-3.4 1.8.6Z"/><circle cx="12" cy="10.5" r="3"/>',
+  settings: iconPaths.settings,
   more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
   chevronLeft: '<path d="m14 6-6 6 6 6"/>',
   chevronRight: '<path d="m10 6 6 6-6 6"/>',

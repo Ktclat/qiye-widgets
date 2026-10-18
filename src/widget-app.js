@@ -83,7 +83,8 @@ function render() {
  mounted=true;
 }
 bridge.onState=message=>{
- environment(message.environment);
+ Object.assign(init.environment,message.environment);environment(message.environment);
+ if(message.environment.size&&message.environment.size!==item.size){item.size=message.environment.size;render();}
  // Do not overwrite an editor draft. Its next save uses optimistic concurrency.
  if(init.environment.mode==='card'&&message.revision!==revision&&!dirty){
   const next=message.legacy||JSON.parse(message.value||'null');if(next){item.config=validateWidgetConfig(kind,next.config);item.data=validateWidgetData(kind,next.data);revision=message.revision;render();}
@@ -96,6 +97,8 @@ document.addEventListener('click',async event=>{
  if(target){event.preventDefault();event.stopImmediatePropagation();if(target.hasAttribute('data-close')){try{await flush();}catch(error){toast(error.message);return;}}bridge.call(target.hasAttribute('data-close')?'close':target.dataset.detailAction==='window-expand'?'expand':'wallpaper').catch(toast);}
  const link=event.target.closest('a[href]');if(link&&/^https:/.test(link.href)){event.preventDefault();bridge.call('openUrl',{url:link.href}).catch(toast);}
 },true);
+document.addEventListener('pointerdown',()=>document.body.classList.add('pointer-focus'),true);
+document.addEventListener('keydown',()=>document.body.classList.remove('pointer-focus'),true);
 document.addEventListener('keydown',async event=>{if(event.key==='Escape'&&!event.defaultPrevented&&init.environment.mode==='window'){try{await flush();bridge.call('close').catch(toast);}catch(error){toast(error.message);}}});
 window.addEventListener('pagehide',()=>{cleanup();});
 environment(init.environment);render();
@@ -110,10 +113,47 @@ bridge.onView=async message=>{
  try{
   await flush();
   Object.assign(init.environment,message.environment);
-  environment(init.environment);render();
+  environment(init.environment);render();await runCommand(message.environment.command);
  }catch(error){render();throw error;}finally{switching=false;}
 };
-bridge.port.postMessage({type:'ready',version:2,features:['view-switch']});
+const contextMenus={
+ notes:[['notes-export','导出 TXT','download']],
+ todo:[['todo-add','添加待办','plus'],['todo-clear','清除已完成','trash']],
+ clock:[['clock-add','添加城市','plus'],['clock-1','每行 1 个','list'],['clock-2','每行 2 个','grid'],['clock-3','每行 3 个','grid']],
+ hotsearch:[['hot-refresh','刷新榜单','refresh'],['hot-manage','管理订阅','list']]
+};
+const contextMenu=[{id:'settings',label:t('设置组件'),icon:'settings'},...(contextMenus[kind]||[]).map(([id,label,icon])=>({id,label:t(label),icon}))];
+async function runCommand(command){
+ if(command==='settings'){await showSettings();return;}
+ const selectors={'notes-export':'[data-life-action=notes-export]','todo-clear':'[data-clear-done]','clock-add':'[data-life-action=clock-add]','clock-1':'[data-clock-columns="1"]','clock-2':'[data-clock-columns="2"]','clock-3':'[data-clock-columns="3"]','hot-refresh':'[data-hot-action=refresh]','hot-manage':'[data-hot-action=manage]'};
+ if(command==='todo-add')document.querySelector('[data-widget-form=todo] input')?.focus();
+ else if(selectors[command])document.querySelector(selectors[command])?.click();
+}
+bridge.onCommand=runCommand;
+bridge.port.postMessage({type:'ready',version:2,features:['view-switch'],contextMenu});
+void runCommand(init.environment.command);
+let gesture=null,suppressClickUntil=0;
+const interactive='input,textarea,select,a,button,[contenteditable=true],[data-no-drag]';
+function sendInteraction(event,action){bridge.port.postMessage({type:'interaction',action,x:event.clientX,y:event.clientY,pointerId:event.pointerId,pointerType:event.pointerType,buttons:event.buttons});}
+document.addEventListener('contextmenu',event=>{
+ if(init.environment.mode!=='card'||init.environment.preview||!init.environment.hostFeatures?.includes('interactions')||event.target.closest('input,textarea,[contenteditable=true]'))return;
+ event.preventDefault();sendInteraction(event,'contextmenu');
+});
+document.addEventListener('pointerdown',event=>{
+ if(init.environment.mode!=='card'||init.environment.preview||!init.environment.hostFeatures?.includes('interactions')||event.button!==0||(event.target.closest(interactive)&&!event.target.closest('[data-action=widget-open]')))return;
+ gesture={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};event.target.setPointerCapture?.(event.pointerId);sendInteraction(event,'pointerdown');
+});
+for(const type of ['pointermove','pointerup','pointercancel'])document.addEventListener(type,event=>{
+ if(gesture?.id!==event.pointerId)return;
+ if(Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>=7)gesture.moved=true;
+ sendInteraction(event,type);
+ if(type!=='pointermove'){if(gesture.moved)suppressClickUntil=Date.now()+600;gesture=null;}
+});
+document.addEventListener('click',event=>{
+ if(Date.now()<suppressClickUntil){event.preventDefault();event.stopImmediatePropagation();return;}
+ if(init.environment.mode==='card'&&event.target.closest('[data-action="widget-config"]')&&init.environment.hostFeatures?.includes('interactions')){event.preventDefault();event.stopImmediatePropagation();sendInteraction(event,'contextmenu');}
+},true);
+
 
 async function showSettings(){if(await cleanup()===false){toast(t('内容尚未保存，重新打开组件可继续编辑。'));return;}const root=document.getElementById('widget-root');root.inert=false;root.innerHTML=widgetSettings(item);cleanup=bindWidgetSettings(root,item,host,render);}
 
