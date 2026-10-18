@@ -8,5 +8,5 @@ export function appButton(action, label, glyph, extra = '') {
 }
 
 export function windowControls(expanded = false) {
-  return `<div class="widget-app-controls"><button type="button" class="widget-app-button" data-plugin-settings aria-label="${t('设置组件')}">${icon('settings')}</button>${appButton('window-expand', t(expanded ? '还原窗口' : '最大化窗口'), expanded ? 'minimize' : 'maximize', `aria-pressed="${expanded}"`)}<button type="button" class="widget-app-button" data-close aria-label="${t('关闭')}" title="${t('关闭')}">${icon('close')}</button></div>`;
+  return `<div class="widget-app-controls"><button type="button" class="widget-app-button" data-plugin-settings aria-label="${t('设置组件')}" title="${t('设置组件')}">${icon('settings')}</button>${appButton('window-expand', t(expanded ? '还原窗口' : '最大化窗口'), expanded ? 'minimize' : 'maximize', `aria-pressed="${expanded}"`)}<button type="button" class="widget-app-button" data-close aria-label="${t('关闭')}" title="${t('关闭')}">${icon('close')}</button></div>`;
 }

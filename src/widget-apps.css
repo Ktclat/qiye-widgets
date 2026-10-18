@@ -1,14 +1,14 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
 #dialog.widget-app-dialog {
-  --app-bg:#131313; --app-pane:#1f1f1f; --app-field:#2b2b2b; --app-border:#303030;
-  --app-fg:#ededf0; --app-muted:#a4a4a9; --app-blue:#327cf5; --app-selection:#303030;
+  --app-bg:#19212b; --app-pane:#202b37; --app-field:#2a3745; --app-border:#344353;
+  --app-fg:#e8eef5; --app-muted:#abb9c8; --app-blue:#327cf5; --app-selection:#304154;
   width:min(1240px,var(--dialog-width)); height:min(800px,var(--dialog-height));
   padding:0; border:1px solid var(--app-border); border-radius:24px; overflow:hidden;
   background:var(--app-bg); color:var(--app-fg); scrollbar-gutter:auto;
 }
 html[data-theme=light] #dialog.widget-app-dialog {
-  --app-bg:#fff; --app-pane:#f6f6f7; --app-field:#eaeaec; --app-border:#dedee2;
-  --app-fg:#252528; --app-muted:#68686f; --app-blue:#2169dd; --app-selection:#e5e5e9;
+  --app-bg:#f7f9fc; --app-pane:#fff; --app-field:#edf1f6; --app-border:#dce3ec;
+  --app-fg:#243246; --app-muted:#64748b; --app-blue:#2169dd; --app-selection:#e4ebf4;
 }
 #dialog.widget-app-expanded { width:var(--dialog-width); height:var(--dialog-height); }
 .widget-app-dialog #dialog-content,.widget-app-body { height:100%; min-height:0; }
@@ -23,7 +23,7 @@ html[data-theme=light] #dialog.widget-app-dialog {
 .widget-app-body :is(button,input,select,textarea):focus-visible { outline:2px solid var(--app-blue); outline-offset:-2px; }
 .widget-app-body input::placeholder,.widget-app-body textarea::placeholder { color:var(--app-muted); opacity:.8; }
 .widget-app-controls { display:flex; flex:none; align-items:center; gap:4px; }
-.widget-app-body .widget-app-button { display:inline-grid; place-items:center; width:30px; height:30px; padding:6px; border-radius:50%; background:transparent; flex:none; }
+.widget-app-body .widget-app-button { display:inline-grid; place-items:center; width:32px; height:32px; padding:7px; border-radius:8px; background:transparent; flex:none; }
 .widget-app-button .icon { width:18px; height:18px; }
 .widget-app-button[aria-pressed=true] { color:var(--app-blue); }
 .widget-app-body .widget-save-feedback { position:absolute; z-index:5; left:12px; right:12px; bottom:8px; max-height:60%; overflow:auto; background:var(--app-pane); border-color:var(--app-border); box-shadow:0 6px 28px #0005; }

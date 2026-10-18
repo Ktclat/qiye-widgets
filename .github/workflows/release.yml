@@ -36,6 +36,7 @@ jobs:
         run: |
           python tests/runtime-e2e.py
           python tests/cache-e2e.py
+          python tests/window-e2e.py
       - uses: actions/upload-artifact@v4
         with:
           name: widgets-release
@@ -104,6 +105,9 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/widgets-public
       - uses: actions/deploy-pages@v4
         id: deployment
+        with:
+          artifact_name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}

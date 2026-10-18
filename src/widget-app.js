@@ -71,7 +71,8 @@ function render() {
   if(['calendar','memo'].includes(kind)){const details=createWidgetDetails(host);root.innerHTML=details.render(item);details.mount(root);cleanup=()=>details.close();}
   else if(UTILITY_WIDGETS.includes(kind)){root.innerHTML=utilityWorkspace(item,state);cleanup=bindUtilityWorkspace(root,item,host);}
   else if(views[kind]){
-   root.innerHTML=views[kind](item,state);
+   // The timer renderer takes a timestamp, while other views may consume host state.
+   root.innerHTML=kind==='pomodoro'?pomodoroWorkspace(item):views[kind](item,state);
    if(kind==='codec')cleanup=bindCodecWorkspace(root);
    else if(kind==='image-compressor')cleanup=bindImageCompressorWorkspace(root,{applyWallpaper:blob=>bridge.call('wallpaper',{blob})});
    else if(kind==='pomodoro')cleanup=bindPomodoro(root,host);

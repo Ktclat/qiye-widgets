@@ -64,6 +64,4 @@ body.reduce-effects #dialog.settings-drawer { animation:none; }
   .calendar-detail { grid-template-columns:1fr; padding:10px; }
   .calendar-month-panel { padding:12px; min-height:380px; }
   .calendar-day-panel { min-height:250px; }
-  .calendar-app-header h2 { font-size:18px; gap:8px; }
-  .calendar-app-icon { width:32px; height:32px; border-radius:10px; }
 }

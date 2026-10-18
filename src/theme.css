@@ -20,7 +20,7 @@ input[type=checkbox],input[type=radio] { accent-color:var(--accent); }
 .primary-button,.switch input:checked+.slider { background:var(--accent); color:var(--accent-ink); }
 html[data-accent=custom] .widget-inner { --w-accent:var(--accent); --w-accent-ink:var(--accent-ink); --w-accent-hover:color-mix(in srgb,var(--accent) 85%,var(--w-fg)); }
 html[data-accent=custom] #dialog.widget-app-dialog { --app-blue:var(--accent); }
-html[data-accent=custom] .calendar-app-icon,
+html[data-accent=custom] .calendar-app-icon { color:var(--accent); }
 html[data-accent=custom] .calendar-day.selected,
 html[data-accent=custom] .memo-new-button { background:var(--accent); color:var(--accent-ink); }
 html[data-accent=custom] .compact-calendar .compact-value { background:var(--accent); color:var(--accent-ink); }

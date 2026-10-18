@@ -114,11 +114,6 @@ export function bindPomodoro(container, host) {
     }
     const action = button.dataset.pomoAction;
     if (action === 'open') { host.openDialog?.('widget-detail', { item }); return; }
-    if (action === 'preferences') {
-      const details = root.querySelector('.pomo-preferences'); details.open = !details.open;
-      if (details.open) { details.scrollIntoView({ block: 'nearest' }); details.querySelector('input').focus({ preventScroll: true }); }
-      return;
-    }
     if (button.dataset.pomoPreset) {
       const form = button.closest('form'), deep = button.dataset.pomoPreset === 'deep';
       for (const [name, value] of Object.entries({ focusMinutes: deep ? 50 : 25, shortBreakMinutes: deep ? 10 : 5, longBreakMinutes: deep ? 30 : 15 })) form.elements[name].value = value;
