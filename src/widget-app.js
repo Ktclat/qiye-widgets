@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
 import { widgetSettings, bindWidgetSettings } from './widget-config-view.js';
 import { t, setLocale } from './i18n.js';
 import { themeTokens } from './theme.js';

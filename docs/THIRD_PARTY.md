@@ -60,6 +60,18 @@ U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD
 页底短句通过 [一言官方语句接口](https://developer.hitokoto.cn/sentence/) `https://v1.hitokoto.cn/` 按次获取（2026-10-15 核验），保留返回的作者、作品名称与 UUID；悬停操作区的引号图标链接到原始条目，不显示常驻的来源文字。该图标复用栖页的矢量图标，不打包服务方商标。源码不打包远程句库；本机最多缓存最近 12 条已获取句子用于断网显示。远程文本权利仍归原权利人，不因栖页的 GPLv3 许可而重新授权。无法联网且无其他缓存时使用栖页自带短句，刷新图标提示其本地回退状态。网络与存储边界见 [PRIVACY.md](PRIVACY.md#页底一言)。
 
 
+## 组件仓库许可证统一（1.0.4，2026-10-19）
+
+按仓库维护者要求，本仓库原创代码统一为 `GPL-3.0-only`，与主程序仓库一致。根目录 [LICENSE](../LICENSE) 直接复制主程序的完整 GPL v3 正文；[LICENSE-GPL-3.0](../LICENSE-GPL-3.0) 保留为内容相同的兼容副本。包元数据、19 个官方组件清单和运行适配器的 SPDX 标记使用同一标识。
+
+本次以新的独立版本发布许可证变更，并同步官方组件源、网页资源与下载包；不改写已有标签或历史发布。Inter 的 OFL-1.1、lunar-javascript 的 MIT 许可及版权声明继续保留，远端素材的原有授权范围也不变。社区清单中的许可证示例由独立作者按其实际代码填写。
+
+核验来源与决策：
+
+- [主程序 LICENSE](https://github.com/Ktclat/qiye/blob/20874b2832f596ced87049609f26a793445d2a16/LICENSE) 与 [包声明](https://github.com/Ktclat/qiye/blob/20874b2832f596ced87049609f26a793445d2a16/package.json)：采用相同的许可正文和 `GPL-3.0-only` 标识。
+- [SPDX：GNU General Public License v3.0 only](https://spdx.org/licenses/GPL-3.0-only.html)：明确区分 `GPL-3.0-only` 与 `GPL-3.0-or-later`，本仓库使用前者。
+- [GitHub：Licensing a repository](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)：在仓库根目录保留完整 LICENSE，并同步 README 中的许可说明。
+
 ## GPLv3 与素材的界限
 
 栖页原创程序以 GPL-3.0-only 发布，根目录 LICENSE 保留完整许可。此授权不改变 Inter 的 OFL-1.1，也不包含对目标网站商标/图标、用户头像/照片或远端图库素材的再授权。Commons 的图片逐张保留作者、文件页和许可；Picsum 原图遵循对应来源条件。具体获取方式和参考条款见 [WALLPAPERS.md](WALLPAPERS.md)。

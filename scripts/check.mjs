@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
 import {readFile,readdir} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {listWidgetDefinitions} from '../src/widget-registry.js';

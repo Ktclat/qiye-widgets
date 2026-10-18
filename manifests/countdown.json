@@ -6,10 +6,10 @@
   "name": "倒数日",
   "description": "记住值得期待的日子",
   "author": "Ktclat",
-  "release": "1.0.3",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.3/widget.html?widget=countdown",
+  "release": "1.0.4",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.4/widget.html?widget=countdown",
   "repository": "https://github.com/Ktclat/qiye-widgets",
-  "license": "AGPL-3.0-only AND GPL-3.0-only",
+  "license": "GPL-3.0-only",
   "sizes": [
     "1x1",
     "1x2",

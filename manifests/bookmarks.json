@@ -6,10 +6,10 @@
   "name": "书签",
   "description": "分层整理独立收藏，授权后管理浏览器书签",
   "author": "Ktclat",
-  "release": "1.0.3",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.3/widget.html?widget=bookmarks",
+  "release": "1.0.4",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.4/widget.html?widget=bookmarks",
   "repository": "https://github.com/Ktclat/qiye-widgets",
-  "license": "AGPL-3.0-only AND GPL-3.0-only",
+  "license": "GPL-3.0-only",
   "sizes": [
     "1x1",
     "1x2",

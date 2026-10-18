@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
 window.addEventListener('message',function initialize(event){
  if(event.source!==parent||event.data?.type!=='qiye:init'||event.data.version!==2||!event.ports[0])return;
  window.removeEventListener('message',initialize);
