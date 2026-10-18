@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Qiye community counter example</title><style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font-family:system-ui,sans-serif;background:#eef3fa;color:#17334b;display:grid;place-items:center;padding:20px}body[data-theme=dark]{background:#18252f;color:#e8f0f7}main{text-align:center;width:100%;max-width:440px}h1{font-size:20px}output{display:block;font-size:76px;margin:20px;font-variant-numeric:tabular-nums}button{font:inherit;border:0;border-radius:14px;background:#237ede;color:white;min-width:70px;padding:14px;margin:5px;cursor:pointer}button:disabled{opacity:.5}p{font-size:13px;line-height:1.6;opacity:.75}#status{min-height:3em;overflow-wrap:anywhere}
+</style></head><body><main><h1 id="title">Counter</h1><output id="count">0</output><div><button id="decrease" aria-label="Decrease">−</button><button id="increase" aria-label="Increase">+</button></div><button id="reset">Reset</button><p id="description">Open this example from Qiye's community catalogue.</p><p id="status" role="status"></p></main><script type="module">
+import {connectWidget} from '../../sdk.js';
+const api=await connectWidget();let count=Number.isSafeInteger(api.data?.count)?api.data.count:0;
+const zh=api.environment.locale.startsWith('zh');document.documentElement.lang=zh?'zh-CN':'en';
+document.querySelector('#title').textContent=zh?'计数器示例':'Counter example';document.querySelector('#reset').textContent=zh?'归零':'Reset';document.querySelector('#description').textContent=zh?'通过隔离接口保存本组件的计数。':'This isolated widget saves only its own counter.';
+const theme=environment=>document.body.dataset.theme=environment.theme;theme(api.environment);api.onEnvironment(theme);
+const output=document.querySelector('#count');output.value=String(count);
+async function change(value){const buttons=[...document.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);try{await api.save({count:value});count=value;output.value=String(count);document.querySelector('#status').textContent=zh?'已保存':'Saved';}catch(error){document.querySelector('#status').textContent=error.message;}finally{buttons.forEach(b=>b.disabled=false);}}
+document.querySelector('#increase').onclick=()=>change(count+1);document.querySelector('#decrease').onclick=()=>change(count-1);document.querySelector('#reset').onclick=()=>change(0);
+</script></body></html>

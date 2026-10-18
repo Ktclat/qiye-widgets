@@ -1,0 +1,48 @@
+{
+  "format": "qiye-widget-source",
+  "version": 1,
+  "name": "栖页社区 / Qiye community",
+  "widgets": [
+    {
+      "format": "qiye-widget",
+      "version": 1,
+      "id": "qiye.counter",
+      "name": "计数器 / Counter",
+      "description": "社区接口示例：增减计数，并在本组件内保存。Community SDK example with persistent counter.",
+      "author": "Qiye contributors",
+      "release": "1.0.0",
+      "entry": "https://ktclat.github.io/qiye-widgets/community/examples/counter/index.html",
+      "repository": "https://github.com/Ktclat/qiye-widgets/tree/main/community/examples/counter",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [
+        {
+          "size": "1x1",
+          "url": "https://ktclat.github.io/qiye-widgets/community/examples/counter/1x1.svg"
+        },
+        {
+          "size": "1x2",
+          "url": "https://ktclat.github.io/qiye-widgets/community/examples/counter/1x2.svg"
+        },
+        {
+          "size": "2x1",
+          "url": "https://ktclat.github.io/qiye-widgets/community/examples/counter/2x1.svg"
+        },
+        {
+          "size": "2x2",
+          "url": "https://ktclat.github.io/qiye-widgets/community/examples/counter/2x2.svg"
+        },
+        {
+          "size": "4x2",
+          "url": "https://ktclat.github.io/qiye-widgets/community/examples/counter/4x2.svg"
+        }
+      ]
+    }
+  ]
+}
