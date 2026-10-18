@@ -26,11 +26,16 @@ css='\n'.join((root/path).read_text(encoding='utf-8') for path in json.loads((ro
 css+='\n'+(root/'runtime/embed.css').read_text(encoding='utf-8')
 font=base64.b64encode((root/'fonts/inter-latin-variable.woff2').read_bytes()).decode();css=css.replace("url('fonts/inter-latin-variable.woff2')","url('data:font/woff2;base64,"+font+"')")
 license=(root/'fonts/OFL-Inter.txt').read_text(encoding='utf-8').replace('--','- -')
-html='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Qiye Widgets '+version+'</title><style>'+css+'</style><!-- Inter license\n'+license+'\n--></head><body><dialog id="dialog" open><main id="widget-root"></main></dialog><script>'+bootstrap+'</script></body></html>'
+# All widget URLs share these version-pinned resources. The browser can reuse
+# HTTP and script-code caches when opening another size or a detail window.
+html='<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>Qiye Widgets '+version+'</title><link rel="stylesheet" href="styles.css"><script defer src="runtime.js"></script></head><body><dialog id="dialog" open><main id="widget-root"></main></dialog></body></html>'
 release=out/'releases'/version;release.mkdir(parents=True,exist_ok=True)
 page=release/'widget.html'
-if page.exists() and page.read_text(encoding='utf-8')!=html and out!=root/'dist':raise SystemExit('Refusing to overwrite a published version; bump package and manifests first')
-page.write_text(html,encoding='utf-8')
+assets={'widget.html':html,'styles.css':css+'\n/* Inter license\n'+license+'\n*/','runtime.js':bootstrap}
+for name,content in assets.items():
+ target=release/name
+ if target.exists() and target.read_text(encoding='utf-8')!=content and out!=root/'dist':raise SystemExit('Refusing to overwrite a published version; bump package and manifests first')
+for name,content in assets.items():(release/name).write_text(content,encoding='utf-8')
 manifests=[json.loads(path.read_text(encoding='utf-8')) for path in sorted((root/'manifests').glob('*.json'))]
 for manifest in manifests:
  if manifest['release']!=version or '/releases/'+version+'/' not in manifest['entry']:raise ValueError('Manifest version does not match package')
@@ -38,12 +43,12 @@ catalog={'format':'qiye-widget-source','version':1,'name':'栖页官方小组件
 (out/'index.json').write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (release/'index.json').write_text(json.dumps(catalog,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (out/'.nojekyll').write_text('');shutil.copyfile(root/'LICENSE',out/'LICENSE');shutil.copyfile(root/'LICENSE-GPL-3.0',out/'LICENSE-GPL-3.0')
-(out/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>Qiye Widgets</title><h1>栖页小组件</h1><p>在栖页设置 → 小组件源中启用官方源。</p><p><a href="index.json">组件目录 '+version+'</a> · <a href="https://github.com/Ktclat/qiye-widgets">源码与文档</a></p>',encoding='utf-8')
+(out/'index.html').write_text('<!doctype html><meta charset="utf-8"><title>Qiye Widgets</title><h1>栖页小组件</h1><p>在栖页设置 → 组件源中启用官方源。</p><p><a href="index.json">组件目录 '+version+'</a> · <a href="https://github.com/Ktclat/qiye-widgets">源码与文档</a></p>',encoding='utf-8')
 shutil.copyfile(root/'README.md',out/'README.md')
 shutil.copytree(root/'community',out/'community',dirs_exist_ok=True)
 archive=out/f'qiye-widgets-{version}.zip'
 with zipfile.ZipFile(archive,'w',compression=zipfile.ZIP_DEFLATED) as z:
- for path in [page,release/'index.json',out/'LICENSE',out/'LICENSE-GPL-3.0']:
+ for path in [*sorted(release.glob('*')),out/'LICENSE',out/'LICENSE-GPL-3.0']:
   info=zipfile.ZipInfo(path.relative_to(out).as_posix(),date_time=(2026,1,1,0,0,0));info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16;z.writestr(info,path.read_bytes())
 (out/f'qiye-widgets-{version}-SHA256SUMS.txt').write_text(hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\n')
-print(f'Built {len(manifests)} widgets, {version}, {len(html.encode())} bytes: {out}')
+print(f'Built {len(manifests)} widgets, {version}, {len(html.encode())} entry bytes + shared versioned runtime/styles: {out}')

@@ -6,8 +6,8 @@
   "name": "下班倒计时",
   "description": "工作日下班与发薪日倒计时",
   "author": "Ktclat",
-  "release": "1.0.0",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.0/widget.html?widget=workday",
+  "release": "1.0.1",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.1/widget.html?widget=workday",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "AGPL-3.0-only AND GPL-3.0-only",
   "sizes": [

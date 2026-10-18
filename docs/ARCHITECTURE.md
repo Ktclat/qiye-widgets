@@ -4,7 +4,7 @@
 
 ## 用户流程
 
-新安装只带桌面与基础功能。**设置 → 小组件源** 预置 `https://ktclat.github.io/qiye-widgets/index.json`，默认关闭；打开设置不读取目录、不加载预览或组件网页。用户启用源后才请求目录，从 **添加 → 小组件** 添加实例。停用或移除源会卸载 iframe，保留实例和数据；重新启用后可继续使用。
+新安装只带桌面与基础功能。**设置 → 组件源** 预置 `https://ktclat.github.io/qiye-widgets/index.json`，默认关闭；打开设置不读取目录、不加载预览或组件网页。用户启用源后才请求目录，从 **添加 → 小组件** 添加实例。停用或移除源会卸载 iframe，保留实例和数据；重新启用后可继续使用。
 
 源开关、目录缓存、组件本机缓存和权限授权属于当前设备，不随桌面备份或 WebDAV 自动启用。新设备导入桌面后仍需主动启用源。目录刷新不会替换已安装清单；点击“更新已添加的组件”才更新入口和版本。目录支持最多 500 个组件、512 KiB，最多订阅 20 个自定义来源，另附官方源。
 
@@ -53,7 +53,7 @@
 
 本仓库是原生组件实现的唯一维护位置；共享的纯工具函数是独立副本，不导入主程序源码。测试夹具 `tests/fixtures/legacy-host.js` 来自拆分前主程序 `018b3b1`，仅用于验证旧数据，绝不进入发布包。旧同 DOM 浏览器回归位于 `tests/legacy-host/`，当前 iframe 运行测试为 `tests/runtime-e2e.py`。
 
-运行 `npm test`、`npm run check`、`python scripts/build.py` 和 `python tests/runtime-e2e.py`。构建结果位于 `dist/`；`releases/X.Y.Z/widget.html` 包含离线资源、字体许可与组件实现，目录 `index.json` 提供固定版本入口。
+运行 `npm test`、`npm run check`、`python scripts/build.py` 和 `python tests/runtime-e2e.py`。构建结果位于 `dist/`；`releases/X.Y.Z/widget.html` 是轻量入口，同目录 `runtime.js`、`styles.css` 包含组件实现、字体及许可，必须一起部署，目录 `index.json` 提供固定版本入口。
 
 发布时更新 package 和所有 manifests 的 release / entry，提交后推送匹配的 `vX.Y.Z` 标签。CI 验证后发布 ZIP 和 SHA256、部署 Pages，保留所有旧版本目录。没有版本标签的提交仅验证；不发布主程序。不能覆盖已经发布的相同版本。
 
@@ -62,3 +62,11 @@
 同一 iframe 的 localStorage / sessionStorage 由宿主按实例提供内存适配与本机持久化，不共享其他组件缓存。书签权限由宿主显式授予；网页来源无法直接访问扩展 API。主程序与组件协议版本需要保持兼容，增加组件无需主程序同步改版。
 
 表单行为依据 [MDN iframe sandbox](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/iframe)：启用 `allow-forms` 让组件的表单校验与 submit 事件工作；仍不启用同源、顶层导航和弹窗权限。组件表单自行导航会撤销宿主端口。
+
+## 1.0.1 加载与缓存
+
+2026-10-18：按用户反馈优化打开组件窗口时的等待。入口 HTML 不再为每种 widget 查询参数重复携带约 1.85 MB 的 JS/CSS；同版本的 19 个组件使用相同 `runtime.js` / `styles.css` URL。宿主在握手完成前保留深浅主题加载界面，组件按原 API 初始化，不申请同源权限。首访仍需联网，资源缓存可被浏览器淘汰，不承诺离线安装或固定加速倍数。
+
+依据：[V8 官方代码缓存建议](https://v8.dev/blog/code-caching-for-devs)建议将非轻量脚本移出 HTML，并保持可缓存的稳定 URL；[MDN script](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script)说明 defer 的执行顺序。我们选择固定版本共享资源，未引入 Service Worker 或宿主远程脚本执行。构建包包含全部依赖，已发布资源拒绝原地覆盖。
+
+验证：`tests/cache-e2e.py` 不拦截网络请求，使用真实 HTTP 缓存，在同一页面依次挂载四个不透明、credentialless 的便签/日历卡片和窗口；断言 `runtime.js` 和 `styles.css` 各只传输一次。`tests/build_test.py` 检查 ZIP 包依赖完整，并确认入口、脚本、样式任一已发布文件发生变化都会拒绝覆盖。19 个组件的五种卡片尺寸、深浅主题和窄窗口继续由 `tests/runtime-e2e.py` 验证。
