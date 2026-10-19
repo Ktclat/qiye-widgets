@@ -84,9 +84,7 @@ function icon(name, className = '') {
   return `<svg class="widget-icon ${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.sparkles}</svg>`;
 }
 
-function configButton(label = t("设置组件")) {
-  return `<button type="button" class="widget-icon-button widget-config" data-action="widget-config" title="${escapeHtml(label)}" aria-label="${escapeHtml(label)}">${icon('more')}</button>`;
-}
+function configButton() { return ''; } // Card management belongs to the context menu.
 
 function header(label, iconName, action = configButton()) {
   return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${iconName ? icon(iconName) : ''}${escapeHtml(label)}</button>${action}</div>`;

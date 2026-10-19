@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
+import { bindWidgetCardInteractions } from './widget-card-interactions.js';
 import { widgetSettings, bindWidgetSettings } from './widget-config-view.js';
 import { t, setLocale } from './i18n.js';
 import { themeTokens } from './theme.js';
@@ -24,6 +25,7 @@ import { bindPomodoro } from './pomodoro-runtime.js';
 import { migrateFocusTimer } from './pomodoro.js';
 
 const bridge=globalThis.qiyeBridge,init=bridge.init;
+const cardInteractions=bindWidgetCardInteractions(bridge);
 setLocale(init.environment.locale);
 const kind=new URL(location.href).searchParams.get('widget')||'clock';
 let revision=init.revision,queue=Promise.resolve(),cleanup=()=>{},dirty=false,pendingSaves=0,lastSaveError=null;
@@ -63,7 +65,7 @@ function render() {
  cleanup();cleanup=()=>{};const root=document.getElementById('widget-root');root.inert=false;
  if(init.environment.mode==='card'){
   document.body.className='embedded-card';root.className='tile tile-widget size-'+item.size;root.dataset.size=item.size;
-  root.innerHTML=renderWidget(item,state);cleanup=bindWidgets(root,host);
+  root.innerHTML=renderWidget(item,state);for(const button of root.querySelectorAll('[data-action=widget-config]'))button.remove();cleanup=bindWidgets(root,host);
  } else {
   document.body.className='embedded-window';root.className='widget-app-body';root.closest('dialog').className='app-dialog widget-app-dialog '+({calendar:'calendar-app-dialog',memo:'memo-app-dialog',weather:'weather-app-dialog',map:'map-app-dialog',bookmarks:'bookmarks-app-dialog',hotsearch:'hotsearch-app-dialog',converter:'converter-app-dialog','file-converter':'file-converter-app-dialog','image-compressor':'image-tool-dialog',codec:'codec-app-dialog',pomodoro:'pomodoro-app-dialog'}[kind]||'utility-app-dialog');
   const views={converter:converterWorkspace,'file-converter':fileConverterWorkspace,codec:codecWorkspace,'image-compressor':imageCompressorWorkspace,map:mapWorkspace,weather:weatherWorkspace,hotsearch:hotsearchWorkspace,bookmarks:bookmarkWorkspace,pomodoro:pomodoroWorkspace};
@@ -100,7 +102,7 @@ document.addEventListener('click',async event=>{
 document.addEventListener('pointerdown',()=>document.body.classList.add('pointer-focus'),true);
 document.addEventListener('keydown',()=>document.body.classList.remove('pointer-focus'),true);
 document.addEventListener('keydown',async event=>{if(event.key==='Escape'&&!event.defaultPrevented&&init.environment.mode==='window'){try{await flush();bridge.call('close').catch(toast);}catch(error){toast(error.message);}}});
-window.addEventListener('pagehide',()=>{cleanup();});
+window.addEventListener('pagehide',()=>{cardInteractions.destroy();cleanup();});
 environment(init.environment);render();
 setInterval(()=>refreshLiveWidgets(document.getElementById('widget-root'),state),1000);
 // The host can move this initialized frame between its card and window slots.
@@ -109,7 +111,7 @@ setInterval(()=>refreshLiveWidgets(document.getElementById('widget-root'),state)
 let switching=false;
 bridge.onView=async message=>{
  if(switching||!['card','window'].includes(message.environment?.mode))throw new Error('Invalid view transition');
- switching=true;
+ switching=true;cardInteractions.cancel();
  try{
   await flush();
   Object.assign(init.environment,message.environment);
@@ -132,27 +134,6 @@ async function runCommand(command){
 bridge.onCommand=runCommand;
 bridge.port.postMessage({type:'ready',version:2,features:['view-switch'],contextMenu});
 void runCommand(init.environment.command);
-let gesture=null,suppressClickUntil=0;
-const interactive='input,textarea,select,a,button,[contenteditable=true],[data-no-drag]';
-function sendInteraction(event,action){bridge.port.postMessage({type:'interaction',action,x:event.clientX,y:event.clientY,pointerId:event.pointerId,pointerType:event.pointerType,buttons:event.buttons});}
-document.addEventListener('contextmenu',event=>{
- if(init.environment.mode!=='card'||init.environment.preview||!init.environment.hostFeatures?.includes('interactions')||event.target.closest('input,textarea,[contenteditable=true]'))return;
- event.preventDefault();sendInteraction(event,'contextmenu');
-});
-document.addEventListener('pointerdown',event=>{
- if(init.environment.mode!=='card'||init.environment.preview||!init.environment.hostFeatures?.includes('interactions')||event.button!==0||(event.target.closest(interactive)&&!event.target.closest('[data-action=widget-open]')))return;
- gesture={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};event.target.setPointerCapture?.(event.pointerId);sendInteraction(event,'pointerdown');
-});
-for(const type of ['pointermove','pointerup','pointercancel'])document.addEventListener(type,event=>{
- if(gesture?.id!==event.pointerId)return;
- if(Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>=7)gesture.moved=true;
- sendInteraction(event,type);
- if(type!=='pointermove'){if(gesture.moved)suppressClickUntil=Date.now()+600;gesture=null;}
-});
-document.addEventListener('click',event=>{
- if(Date.now()<suppressClickUntil){event.preventDefault();event.stopImmediatePropagation();return;}
- if(init.environment.mode==='card'&&event.target.closest('[data-action="widget-config"]')&&init.environment.hostFeatures?.includes('interactions')){event.preventDefault();event.stopImmediatePropagation();sendInteraction(event,'contextmenu');}
-},true);
 
 
 async function showSettings(){if(await cleanup()===false){toast(t('内容尚未保存，重新打开组件可继续编辑。'));return;}const root=document.getElementById('widget-root');root.inert=false;root.innerHTML=widgetSettings(item);cleanup=bindWidgetSettings(root,item,host,render);}

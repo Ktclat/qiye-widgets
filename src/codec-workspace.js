@@ -9,7 +9,7 @@ import { BEAST_ALPHABET } from './codec-fun.js';
 const CODEC_GROUPS = {encoding:'编码 / 解码', fun:'趣味编码', hash:'哈希摘要'};
 
 export function codecCard(item) {
-  return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${icon('code')}${esc(item.title)}</button><button type="button" class="widget-icon-button" data-action="widget-config" aria-label="${t('设置组件')}">${icon('more')}</button></div>
+  return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${icon('code')}${esc(item.title)}</button></div>
     <button type="button" class="codec-card-hero" data-action="widget-open" aria-label="${t('打开编码工具')}"><span class="codec-card-symbol" aria-hidden="true"><b>Aa</b><span>⇄</span><b>64</b></span><span>${t('文本转换，一步完成')}</span></button>
     <div class="codec-card-shortcuts">${[['base64','Base64'],['url','URL'],['md5','MD5']].map(([id,name]) => `<button type="button" data-action="widget-open" data-codec-algorithm="${id}" aria-label="${t('打开 {name}',{name})}">${name}</button>`).join('')}</div>
     <div class="codec-card-footer"><span>${t('编码 · 解码 · 哈希')}</span>${icon('right')}</div>`;

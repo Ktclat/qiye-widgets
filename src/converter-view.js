@@ -16,7 +16,7 @@ const numberField = (id, label, value = '', suffix = '') => `<label class="cv-fi
 
 export function converterCard(item) {
   if (item.data.category === 'radix') return baseConverterCard({ ...item, data: item.data.radix });
-  return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${icon('converter')}${e(item.title)}</button><button type="button" class="widget-icon-button" data-action="widget-config" aria-label="${t('设置组件')}">${icon('more')}</button></div>
+  return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${icon('converter')}${e(item.title)}</button></div>
     <button type="button" class="cv-card-face" data-action="widget-open" aria-label="${t('打开换算器')}"><span class="cv-card-equation"><b>1<span>m</span></b><i aria-hidden="true">⇄</i><b>100<span>cm</span></b></span><span class="cv-card-caption">${t('万物有尺度，换算很简单')}</span></button>
     <div class="cv-card-tags" aria-hidden="true"><span>±</span><span>01</span><span>¥</span><span>°C</span></div><div class="cv-card-bottom"><span>${t('20 类常用换算')}</span>${icon('arrowUpRight')}</div>`;
 }

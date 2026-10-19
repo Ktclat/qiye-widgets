@@ -6,8 +6,8 @@
   "name": "地图",
   "description": "探索大陆、港澳台，切换高德与多个地图源，收藏地点与打开导航",
   "author": "Ktclat",
-  "release": "1.0.5",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.5/widget.html?widget=map",
+  "release": "1.0.6",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=map",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

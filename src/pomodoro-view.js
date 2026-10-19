@@ -45,7 +45,7 @@ export function pomodoroCard(item, now = Date.now()) {
   const today = pomodoroToday(item.data, now);
   const open = `<button type="button" class="pomo-open-dial" data-action="widget-open" aria-label="${e(t('打开{v0}', { v0: item.title || t('番茄钟') }))}">${dial(item, now)}</button>`;
   const content = compact ? `${open}${size === '1x1' ? '' : toggle(item, true)}` : `
-    <div class="pomo-card-heading"><button type="button" data-action="widget-open">${icon('tomato')}<span>${t('番茄钟')}</span></button><button type="button" class="pomo-card-more" data-action="widget-config" aria-label="${t('设置组件')}">${icon('more')}</button></div>
+    <div class="pomo-card-heading"><button type="button" data-action="widget-open">${icon('tomato')}<span>${t('番茄钟')}</span></button></div>
     <div class="pomo-card-body"><div class="pomo-card-timer">${open}${toggle(item, true)}</div><div class="pomo-card-side"><span class="pomo-eyebrow">${t('此刻专注')}</span><strong data-pomo="task">${e(item.data.task || t('只做眼前这一件事'))}</strong><div class="pomo-cycle" data-pomo="cycle" role="img" aria-label="${cycleLabel(item)}">${cycleMarkup(item)}</div><span class="pomo-card-next" data-pomo="next">${t('每 {count} 颗番茄，长休一次', { count: item.config.longBreakEvery })}</span></div></div>
     <div class="pomo-card-footer"><span>${icon('tomato')}<span data-pomo="today">${t('今日 {count} 颗', { count: today.count })}</span></span><span data-pomo="minutes">${t('{count} 分钟', { count: today.minutes })}</span></div>`;
   return `<div class="widget-inner w-pomodoro${compact ? ' pomo-compact' : ''}" data-widget="pomodoro" data-widget-id="${e(item.id)}" data-display-size="${size}" data-phase="${item.data.phase}" data-status="${item.data.status}">${content}</div>`;
