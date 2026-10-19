@@ -17,3 +17,6 @@ button:focus:not(:focus-visible),select:focus:not(:focus-visible){outline:none}
 html[data-theme=dark]{color-scheme:dark}
 html[data-theme=light]{color-scheme:light}
 .embedded-window .utility-app-header>span:first-child{width:26px;height:26px}
+html.widget-dragging,html.widget-dragging *{cursor:grabbing!important;user-select:none!important}
+
+.embedded-card [data-action="widget-config"]{display:none!important}

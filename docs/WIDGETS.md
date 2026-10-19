@@ -34,7 +34,7 @@
 
 热榜接口实测对 `Origin: null` 不返回 CORS 授权头，正常网页来源可读取；隔离 iframe 恰好使用不透明来源。参考 [MDN Origin](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Origin) 与 [UAPI 热榜官方文档](https://uapis.cn/docs/api-reference/get-misc-hotboard)，宿主新增 `hotboard` 调用，只接受固定平台枚举并请求固定 HTTPS 路径，不接受自定义 URL、凭据或请求头。宿主负责 1 MiB 限制、超时、短时请求合并；组件保留 10 分钟缓存、失败时的旧数据与手动重试。自定义数据源仍使用自己的 CORS。扩展版通过窗口标题栏的“授权热榜访问”只申请该 API 域名，然后自动刷新；网页版无需扩展授权。直接用 file:// 打开预览时，联网服务仍受不透明来源的 CORS 限制，联网验收使用 HTTP 预览和公开网页。
 
-iframe 内的 DOM 事件不冒泡到桌面，导致组件分仓后丢失拖动和右键菜单。现在使用已有实例 MessagePort 转发经过模式与坐标校验的指针/菜单事件；文本输入保留原生编辑菜单，组件标题和非交互背景可拖动，另有宿主拖动柄。依据 [MDN Pointer capture](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture) 与 [moveBefore](https://developer.mozilla.org/en-US/docs/Web/API/Element/moveBefore)，支持时原位移动 iframe，避免重新加载编辑器。菜单使用 [WAI Menu Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) 的方向键、Escape 和焦点返回；支持 Shift+F10，桌面继续支持 Alt+方向键排序。
+iframe 内的 DOM 事件不冒泡到桌面，导致组件分仓后丢失拖动和右键菜单。现在使用已有实例 MessagePort 转发经过模式与坐标校验的指针/菜单事件；文本输入保留原生编辑菜单，卡片长按交互已按下文“无按钮长按拖动”更新。依据 [MDN Pointer capture](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture) 与 [moveBefore](https://developer.mozilla.org/en-US/docs/Web/API/Element/moveBefore)，支持时原位移动 iframe，避免重新加载编辑器。菜单使用 [WAI Menu Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/) 的方向键、Escape 和焦点返回；支持 Shift+F10，桌面继续支持 Alt+方向键排序。
 
 组件可声明有界 `contextMenu`，宿主统一提供打开、编辑、移动、复制、尺寸和删除。便签追加导出、待办追加添加/清除完成、热搜追加刷新/订阅、世界时钟追加城市和列数。第三方菜单只能使用文本标签、已知图标和命令标识，不能注入 HTML。来源撤销、预览和窗口模式不会转发桌面指针操作。
 
@@ -43,3 +43,13 @@ iframe 内的 DOM 事件不冒泡到桌面，导致组件分仓后丢失拖动�
 宿主：`npm test`、`tests/plugin-e2e.py`、`tests/plugin-window-e2e.py`、`tests/plugin-reuse-e2e.py`、`tests/extension-e2e.py`。跨仓库联调使用 `python tests/widget-interactions-e2e.py --widgets-root ../qiye-widgets`，可加 `--preview` 或在发布后用 `--live`；覆盖真实拖动、菜单、调整尺寸、刷新保存、3 秒提示与未拦截的知乎热榜请求。
 
 组件库：`npm test`、`npm run check`、`tests/runtime-e2e.py`、`tests/widget-controls-e2e.py`、`tests/window-e2e.py`；包括全部 19 个组件、五种卡片尺寸、深浅色、窄窗、时区日期和配置持久化。截图保存在测试输出目录，不进入发布包。
+
+## 无按钮长按拖动（2026-10-19）
+
+按用户澄清，桌面卡片不显示菜单、拖动柄或编辑模式的管理按钮。组件设置、尺寸和专属命令放在右键菜单中；窗口内的设置按钮、待办勾选等功能控件继续正常工作。卡片输入区的右键也打开该组件菜单，键盘可用 Shift+F10。
+
+参考 [dnd kit Pointer Sensor 的延迟与移动容差](https://dndkit.com/legacy/api-documentation/sensors/pointer/)、[MDN Pointer capture](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture)、[pointercancel](https://developer.mozilla.org/en-US/docs/Web/API/Element/pointercancel_event) 和 [touch-action](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/touch-action)。以 iTab 的简洁卡片为视觉基线，采用整张卡片 320ms 长按，无新增可视控件；长按成立前移动超过 7px 会取消候选，保留文字选择、点击和滚动。
+
+宿主统一计时，确认后通过 `drag-state` 通知隔离 iframe 捕获指针。输入框、复选框、链接和按钮均可启动长按，激活后抑制松手点击；Escape、指针取消、页面失焦均清理状态。触摸事件只在已经激活的拖动中阻止滚动。支持 `moveBefore` 时将运行中的卡片内容移入拖动层，结束时原位归还，避免克隆 iframe 重新联网或出现空白预览；不支持时使用静态标题预览，保留 iframe 原位直到松手提交排序。
+
+验证：`tests/drag.test.mjs` 覆盖长按门槛和文本输入；`tests/widget-long-press-e2e.py --widgets-root ../qiye-widgets` 覆盖全部 19 张卡片、深浅色、实际文本选择、输入区拖动与保存、按钮长按不误触、取消恢复、右键和真实触摸事件。另支持 `--preview`、`--live` 验证独立预览及发布页面。
