@@ -1,0 +1,433 @@
+{
+  "format": "qiye-widget-source",
+  "version": 1,
+  "name": "栖页官方小组件 / Qiye Widgets",
+  "widgets": [
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.bookmarks",
+      "name": "书签",
+      "description": "分层整理独立收藏，授权后管理浏览器书签",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=bookmarks",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": [
+        "bookmarks"
+      ]
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.calendar",
+      "name": "日历",
+      "description": "公历月份与中国农历",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=calendar",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.clock",
+      "name": "世界时钟",
+      "description": "查看城市时间与时差",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=clock",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.codec",
+      "name": "编码工具",
+      "description": "Base64、URL、Unicode 编解码，MD2 / MD4 / MD5、SHA 摘要，佛曰、兽语 / 兽音译者、熊曰 / 与熊论道",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=codec",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.converter",
+      "name": "换算器",
+      "description": "计算器、进制转换、货币汇率、BMI、日期与时间，以及长度、面积、质量、体积、温度、角度、力等常用单位换算",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=converter",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.countdown",
+      "name": "倒数日",
+      "description": "记住值得期待的日子",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=countdown",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.file-converter",
+      "name": "文件转换",
+      "description": "PNG、JPG、WebP 图片批量转换，纯本地处理",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=file-converter",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.habit",
+      "name": "习惯打卡",
+      "description": "每日打卡和连续天数",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=habit",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.hotsearch",
+      "name": "热搜榜",
+      "description": "订阅全网热榜，分类浏览与实时更新",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=hotsearch",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.image-compressor",
+      "name": "图片压缩",
+      "description": "本机无损 PNG 优化、WebP 高画质压缩、批量对比与下载",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=image-compressor",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": [
+        "wallpaper"
+      ]
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.map",
+      "name": "地图",
+      "description": "探索大陆、港澳台，切换高德与多个地图源，收藏地点与打开导航",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=map",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": [
+        "geolocation"
+      ]
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.memo",
+      "name": "备忘录",
+      "description": "多条笔记、搜索、置顶与自动保存",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=memo",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.notes",
+      "name": "便签",
+      "description": "随手记录，自动保存到本机",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=notes",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.pomodoro",
+      "name": "番茄钟",
+      "description": "一颗番茄，一件事。专注与休息交替，收获每天的小小成果",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=pomodoro",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.quote",
+      "name": "每日一句",
+      "description": "给日常留一点思考的空白",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=quote",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.todo",
+      "name": "待办清单",
+      "description": "添加、勾选和删除日常任务",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=todo",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.wallpaper",
+      "name": "在线壁纸",
+      "description": "浏览公开摄影图库，一键设为壁纸",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=wallpaper",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": [
+        "wallpaper"
+      ]
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.weather",
+      "name": "天气",
+      "description": "启用后显示城市的实时天气",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=weather",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    },
+    {
+      "format": "qiye-widget",
+      "version": 2,
+      "apiVersion": 2,
+      "id": "qiye.workday",
+      "name": "下班倒计时",
+      "description": "工作日下班与发薪日倒计时",
+      "author": "Ktclat",
+      "release": "1.0.6",
+      "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=workday",
+      "repository": "https://github.com/Ktclat/qiye-widgets",
+      "license": "GPL-3.0-only",
+      "sizes": [
+        "1x1",
+        "1x2",
+        "2x1",
+        "2x2",
+        "4x2"
+      ],
+      "previews": [],
+      "capabilities": []
+    }
+  ]
+}
