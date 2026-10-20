@@ -6,8 +6,8 @@
   "name": "番茄钟",
   "description": "一颗番茄，一件事。专注与休息交替，收获每天的小小成果",
   "author": "Ktclat",
-  "release": "1.0.6",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=pomodoro",
+  "release": "1.0.7",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.7/widget.html?widget=pomodoro",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

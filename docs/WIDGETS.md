@@ -53,3 +53,18 @@ iframe 内的 DOM 事件不冒泡到桌面，导致组件分仓后丢失拖动�
 宿主统一计时，确认后通过 `drag-state` 通知隔离 iframe 捕获指针。输入框、复选框、链接和按钮均可启动长按，激活后抑制松手点击；Escape、指针取消、页面失焦均清理状态。触摸事件只在已经激活的拖动中阻止滚动。支持 `moveBefore` 时将运行中的卡片内容移入拖动层，结束时原位归还，避免克隆 iframe 重新联网或出现空白预览；不支持时使用静态标题预览，保留 iframe 原位直到松手提交排序。
 
 验证：`tests/drag.test.mjs` 覆盖长按门槛和文本输入；`tests/widget-long-press-e2e.py --widgets-root ../qiye-widgets` 覆盖全部 19 张卡片、深浅色、实际文本选择、输入区拖动与保存、按钮长按不误触、取消恢复、右键和真实触摸事件。另支持 `--preview`、`--live` 验证独立预览及发布页面。
+
+
+## 拖动稳定性与长按手感（2026-10-20）
+
+复现了鼠标单向匀速移动时卡片回退数像素的问题：MessagePort 中的 iframe 局部坐标产生于旧位置，宿主收到消息时 iframe 已跟随鼠标移动，叠加当前边界会造成反馈误差。组件现在附带事件发生时的屏幕坐标，宿主固定按下锚点，并在卡片未移动时用首段至少 4px 的位移校准屏幕/视口比例；之后每帧只使用最新指针位置，不再读取移动中 iframe 的边界。兼容页面缩放和高 DPI，旧协议保留。
+
+长按统一设为 400ms，保留长按前 7px 的移动取消容差；约 0.4 秒区分点击和拖动，同时避免明显等待。桌面卡片仍没有菜单或拖动按钮。组件拖动时保持原尺寸，取消起拖的缩放弹跳；稠密网格在下一次换位前要求至少 10px 的实际指针/滚动位移，防止尺寸不同的卡片仅因布局重排就在边界往返交换。首次聚焦 iframe 时父窗口可能收到 blur，但 document.hasFocus() 仍为 true；只有真正离开页面才取消手势。
+
+公开示例：[dnd kit 延迟与容差](https://dndkit.com/legacy/api-documentation/sensors/pointer/)。技术依据：[MDN clientX](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/clientX)、[screenX](https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/screenX)、[getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)、[requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame)、[hasFocus](https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus)。400ms 与位移容差为本项目结合可编辑卡片作出的交互选择，不是引用资料规定的标准值。
+
+验证入口：宿主 `tests/plugin-pointer.test.mjs`、`tests/drag.test.mjs`，组件 `tests/card-interactions.test.mjs`；跨仓库 `tests/widget-drag-stability-e2e.py --widgets-root ../qiye-widgets` 对真实鼠标指针消息增加 35ms 延迟，逐帧检查单向移动无回退、终点偏差小于 1px、停留不反复换位、iframe 无重载，覆盖五种尺寸、深浅色、80% / 125% 缩放与 390px 窄屏。可用 `--preview` / `--live` 复核构建和线上版本；原有 `tests/widget-long-press-e2e.py` 覆盖 19 个组件、文本选择、保存、取消、右键及触摸。
+
+触摸模拟器或隐私环境可能不提供屏幕坐标（例如持续为 0,0）。该次手势继续使用旧的视口坐标路径，避免卡片停在起点；单元测试覆盖此回退，浏览器测试使用原生触摸消息检查跟随与释放。35ms 延迟压力测试针对具有有效屏幕坐标的鼠标事件。
+
+长按成立后的触摸使用 TouchEvent 的移动/结束流；浏览器为判断平移而取消 PointerEvent 时，不提前丢弃仍在进行的单指触摸。第一次活动 touchmove 阻止默认滚动，touchend / touchcancel、多指或失焦统一收尾；长按前的划动保持原生滚动。依据 [dnd kit Touch Sensor](https://dndkit.com/legacy/api-documentation/sensors/touch/)，浏览器连续触摸轨迹与释放已纳入窄屏回归。
