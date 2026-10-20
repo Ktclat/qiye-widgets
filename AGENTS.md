@@ -7,3 +7,4 @@
 - Verify affected card sizes, dark/light themes, narrow layouts, data persistence and relevant date/time behavior.
 - For each delivered change, rebuild the standalone preview and synchronize the authorized public web version. Verify the published artifact before claiming it is synchronized.
 - Preserve unrelated work in the shared checkout; stage only the current task’s changes.
+- After testing and a verified merge or publication into `main` or `gh-pages`, delete no-longer-needed task/test branches both locally and on `origin`. Apply this to both `qiye` and `qiye-widgets`. First verify commit ancestry or equivalent published content; preserve active or unmerged work, `main`, `gh-pages`, and release tags. Archive completed managed worktrees after saving any needed ignored artifacts.
