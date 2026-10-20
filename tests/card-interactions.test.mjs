@@ -22,6 +22,13 @@ test('short clicks and pre-hold text selection retain native defaults',()=>{
  assert.equal(h.messages.at(-1).action,'pointercancel');assert.equal(h.emit('click').defaultPrevented,false);
  h.controls.destroy();
 });
+
+test('the bridge forwards event-time screen coordinates without reading moving layout',()=>{
+ const h=harness();h.emit('pointerdown',{screenX:-100,screenY:200});h.bridge.onDragState({pointerId:1,active:true});
+ h.emit('pointermove',{clientX:12,clientY:9,screenX:-80,screenY:210});
+ assert.deepEqual(Object.fromEntries(['x','y','screenX','screenY'].map(k=>[k,h.messages.at(-1)[k]])),{x:12,y:9,screenX:-80,screenY:210});
+ h.controls.destroy();
+});
 test('confirmed hold captures once and suppresses the release action, including Escape',()=>{
  for(const cancel of [false,true]){
   const h=harness();h.emit('pointerdown');h.bridge.onDragState({pointerId:1,active:true});assert.equal(h.captured(),1);
@@ -47,5 +54,17 @@ test('touch cancellation, extra pointers and lost capture clear pending sessions
   if(event==='second')h.emit('pointerdown',{pointerId:2,isPrimary:false});
   else h.emit(event,{target:h.surface});
   assert.equal(h.captured(),null);assert.equal(h.classes.size,0);h.controls.destroy();
+ }
+});
+
+test('an active touch survives pointer cancellation and ends through the touch stream',()=>{
+ for(const ending of ['touchend','touchcancel']){
+  const h=harness(),touch={identifier:5,clientX:20,clientY:20,screenX:120,screenY:220};
+  h.emit('pointerdown',{pointerType:'touch'});h.emit('touchstart',{touches:[touch],changedTouches:[touch]});
+  h.bridge.onDragState({pointerId:1,active:true});h.emit('pointercancel',{pointerType:'touch'});h.emit('lostpointercapture',{target:h.surface});
+  assert.equal(h.classes.has('widget-dragging'),true);
+  assert.equal(h.emit('touchmove',{changedTouches:[{...touch,clientX:50,screenX:150}]}).defaultPrevented,true);
+  assert.equal(h.messages.at(-1).action,'pointermove');assert.equal(h.messages.at(-1).screenX,150);
+  h.emit(ending,{changedTouches:[touch]});assert.equal(h.messages.at(-1).action,ending==='touchend'?'pointerup':'pointercancel');assert.equal(h.classes.size,0);h.controls.destroy();
  }
 });

@@ -6,8 +6,8 @@
   "name": "世界时钟",
   "description": "查看城市时间与时差",
   "author": "Ktclat",
-  "release": "1.0.6",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.6/widget.html?widget=clock",
+  "release": "1.0.7",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.7/widget.html?widget=clock",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

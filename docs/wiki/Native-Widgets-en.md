@@ -149,7 +149,7 @@ API v3 uses the author's `render` / `mount` / `update` at every declared size, i
 
 ## Dragging, themes and localization
 
-The host handles dragging, groups, duplication, deletion/undo and keyboard ordering. Holding an ordinary surface or button for about 320 ms starts dragging; moving while holding the mouse can also start a drag. Short clicks keep their actions. Text editing and touch scrolling retain their behavior. Do not add drag handles or intercept host capture-phase pointer events. Esc cancels, Enter opens a focused card and Alt + arrow keys reorder it.
+The host handles dragging, groups, duplication, deletion/undo and keyboard ordering. Holding any part of a widget for about 400 ms starts dragging. Short clicks keep their actions. Text editing and touch scrolling retain their behavior. Do not add drag handles or intercept host capture-phase pointer events. Esc cancels, Enter opens a focused card and Alt + arrow keys reorder it.
 
 Add CSS to an already loaded stylesheet, such as `src/widgets.css`, scoped under `[data-widget="your-type"]`. Use semantic variables including `--w-bg`, `--w-fg`, `--w-muted`, `--w-accent` and `--w-accent-ink`. Avoid hard-coded white inputs, options or text. Support `settings.useThemeColor`, both themes and reduced motion.
 
