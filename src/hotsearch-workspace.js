@@ -288,27 +288,6 @@ export function bindHotsearchCards(container,host) {
     try { const job=hotsearchClient.request(item.config,item.config.activeSource,{manual,signal:entry.controller.signal});render(root);await job;if(pending.get(root)===entry)render(root); }
     finally {if(pending.get(root)===entry)pending.delete(root);}
   }
-  async function selectSource(root,id) {
-    const item=current(root),previous=item.config;
-    try {
-      if(!hotsearchSource(id)?.github)await requestPublicOrigin(previous.apiBase);
-      if(!alive(root)||current(root)!==item)return;
-      item.config={...previous,activeSource:id};await host.save();render(root);
-      const picker=root.querySelector('[data-hot-card-select]');
-      const control=picker?.getClientRects().length?picker:root.querySelector(`[data-hot-card-source="${id}"]`);
-      control?.focus({preventScroll:true});void load(root,true);
-    } catch(error) {if(current(root)===item)item.config=previous;render(root);if(!error?.notified)host.toast?.(error.message);}
-  }
-  container.addEventListener('click',event=>{
-    const button=event.target.closest('[data-hot-card-source]'),root=button?.closest('[data-widget=hotsearch]');
-    if(!root||!alive(root))return;
-    event.preventDefault();event.stopPropagation();void selectSource(root,button.dataset.hotCardSource);
-  },{signal:controller.signal});
-  container.addEventListener('change',event=>{
-    const picker=event.target.closest('[data-hot-card-select]'),root=picker?.closest('[data-widget=hotsearch]');
-    if(!root||!alive(root))return;
-    event.preventDefault();event.stopPropagation();void selectSource(root,picker.value);
-  },{signal:controller.signal});
   const tick=()=>{if(!globalThis.document?.hidden)for(const root of roots())void load(root);};
   const timer=setInterval(tick,60000);tick();
   return ()=>{controller.abort();for(const entry of pending.values())entry.controller.abort();pending.clear();clearInterval(timer);};

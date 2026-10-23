@@ -22,5 +22,6 @@
   "src/converter.css",
   "src/file-converter.css",
   "src/map.css",
-  "src/widget-controls.css"
+  "src/widget-controls.css",
+  "src/responsive-cards.css"
 ]

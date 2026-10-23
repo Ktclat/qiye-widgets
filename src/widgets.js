@@ -323,7 +323,7 @@ export function renderWidget(item, state) {
   if (type === 'map') return mapCard(item);
   if (type === 'pomodoro') return pomodoroCard(item);
   if(type==='community')return `<div class="widget-inner w-community" data-widget="community" data-widget-id="${escapeHtml(item.id)}" data-display-size="${item.size}">${communityCard(item)}</div>`;
-  if (definition.builtin && type !== 'bookmarks' && isCompactWidget(item.size)) return renderCompact(item);
+  if (definition.builtin && !['bookmarks','hotsearch'].includes(type) && !(type === 'converter' && item.data.category !== 'radix') && isCompactWidget(item.size)) return renderCompact(item);
   if (definition && !definition.builtin) {
     let content;
     try {
