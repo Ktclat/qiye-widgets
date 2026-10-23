@@ -64,13 +64,15 @@ export function hotsearchWorkspace(item) {
 }
 export function hotsearchCard(item, state) {
   const source = hotsearchSource(item.config.activeSource), status = hotsearchClient.state(item.config,source.id);
-  const sources = item.config.subscriptions.map(hotsearchSource);
-  if (sources.length && !sources.some(entry=>entry.id===source.id)) sources.unshift(source);
-  const content = !item.config.subscriptions.length ? `<button type="button" class="hotsearch-card-empty" data-action="widget-open"><strong>${t('还没有订阅榜单')}</strong><span>${t('管理订阅')}</span></button>`
-    : status.data?.items.length ? hotsearchRows(status.data,source,state,4)
-    : `<button type="button" class="hotsearch-card-empty" data-action="widget-open"><strong>${t(status.status==='error'?'榜单暂不可用':status.data?'这个榜单暂时没有内容。':status.status==='loading'||item.config.enabled?'正在加载榜单…':'点击查看实时榜单')}</strong><span>${t('打开热搜榜')}</span></button>`;
-  const picker = sources.length ? `<select class="hotsearch-card-picker" data-hot-card-select aria-label="${t('榜单平台')}">${sources.map(entry=>`<option value="${entry.id}" ${entry.id===source.id?'selected':''}>${esc(t(entry.name))}</option>`).join('')}</select>` : '';
-  return `<header class="hotsearch-card-header"><button type="button" data-action="widget-open" aria-label="${t('打开热搜榜')}">${icon('right')}</button></header><div class="hotsearch-card-tabs">${sources.map(entry=>`<button type="button" data-hot-card-source="${entry.id}" aria-pressed="${entry.id===source.id}"><span>${esc(t(entry.name))}</span></button>`).join('')}</div>${picker}<div class="hotsearch-card-content">${content}</div><footer class="hotsearch-card-footer">${status.data&&sources.length?esc(timestamp(status.data))+(status.status==='error'?' · '+t('缓存'):''):t('订阅你关心的每一份热榜')}</footer>`;
+  const subscribed = item.config.subscriptions.length > 0;
+  const hasRows = subscribed && Boolean(status.data?.items.length);
+  const limit = item.size === '4x2' ? 4 : item.size === '2x2' ? 3 : 1;
+  const message = !subscribed ? '还没有订阅榜单' : status.status === 'error' ? '榜单暂不可用'
+    : status.data ? '这个榜单暂时没有内容。' : status.status === 'loading' || item.config.enabled ? '正在加载榜单…' : '点击查看实时榜单';
+  const content = hasRows ? hotsearchRows(status.data,source,state,limit)
+    : `<button type="button" class="hs-card-empty" data-action="widget-open" aria-label="${t('打开热搜榜')}"><strong>${esc(t(subscribed ? source.name : '我的订阅'))}</strong><span>${esc(t(message))}</span></button>`;
+  const cached = hasRows && (status.status === 'error' || Date.now()-status.data.fetchedAt >= HOTSEARCH_TTL);
+  return `<button type="button" class="hs-card-heading" data-action="widget-open" aria-label="${t('打开热搜榜')}">${icon('trending')}<strong>${esc(item.title)}</strong><span class="hs-card-source">${esc(t(source.name))}</span></button><div class="hs-card-content" data-has-rows="${hasRows}">${content}</div><span class="hs-card-footer">${hasRows ? esc(timestamp(status.data))+(cached?' · '+t('缓存'):'') : t('订阅你关心的每一份热榜')}</span>`;
 }
 
 export function refreshHotsearchCards(container, state) {

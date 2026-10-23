@@ -16,9 +16,21 @@ const numberField = (id, label, value = '', suffix = '') => `<label class="cv-fi
 
 export function converterCard(item) {
   if (item.data.category === 'radix') return baseConverterCard({ ...item, data: item.data.radix });
-  return `<div class="widget-heading"><button type="button" class="widget-title" data-action="widget-open">${icon('converter')}${e(item.title)}</button></div>
-    <button type="button" class="cv-card-face" data-action="widget-open" aria-label="${t('打开换算器')}"><span class="cv-card-equation"><b>1<span>m</span></b><i aria-hidden="true">⇄</i><b>100<span>cm</span></b></span><span class="cv-card-caption">${t('万物有尺度，换算很简单')}</span></button>
-    <div class="cv-card-tags" aria-hidden="true"><span>±</span><span>01</span><span>¥</span><span>°C</span></div><div class="cv-card-bottom"><span>${t('20 类常用换算')}</span>${icon('arrowUpRight')}</div>`;
+  // Show a real unit equivalence using the saved pair; calculator/currency views
+  // keep the local length example, without inventing a rate or a saved input.
+  const selected = converterCategory(item.data.category);
+  const category = selected?.units.length ? selected : converterCategory('length');
+  const pair = item.data.pairs[category.id];
+  const [from, to] = pair.map(id => category.units.find(unit => unit.id === id));
+  const result = convertUnit(category.id, '1', from.id, to.id);
+  const exact = formatConversion(result, item.data.precision);
+  const display = exact.length > 9 ? result.toExponential(3).replace(/\.0+e/, 'e') : exact;
+  const relation = Number(display) === result ? '=' : '≈';
+  return `<button type="button" class="cv-card" data-action="widget-open" aria-label="${e(t('打开换算器'))}">
+    <span class="cv-card-brand">${icon('converter')}<strong>${e(item.title)}</strong></span>
+    <span class="cv-card-equation" title="${e(`1 ${from.symbol} = ${exact} ${to.symbol}`)}"><span class="cv-card-from"><b>1</b><small>${e(from.symbol)}</small></span><span class="cv-card-equals" aria-hidden="true">${relation}</span><span class="cv-card-to"><b style="--cv-digits:${Math.max(3,display.length)}">${e(display)}</b><small>${e(to.symbol)}</small></span></span>
+    <span class="cv-card-bottom"><span>${e(converterLabel(category))}</span><span>${t('20 类常用换算')}</span></span>
+  </button>`;
 }
 
 export function converterWorkspace(item) {

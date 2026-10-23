@@ -35,6 +35,7 @@ jobs:
       - name: Every widget, five card sizes, both themes and narrow windows
         run: |
           python tests/runtime-e2e.py
+          python tests/responsive-cards-e2e.py
           python tests/cache-e2e.py
           python tests/view-switch-e2e.py
           python tests/window-e2e.py
