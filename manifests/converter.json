@@ -6,8 +6,8 @@
   "name": "换算器",
   "description": "计算器、进制转换、货币汇率、BMI、日期与时间，以及长度、面积、质量、体积、温度、角度、力等常用单位换算",
   "author": "Ktclat",
-  "release": "1.0.11",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.11/widget.html?widget=converter",
+  "release": "1.0.12",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.12/widget.html?widget=converter",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

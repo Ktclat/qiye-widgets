@@ -101,7 +101,7 @@ with sync_playwright() as pw:
                     if mode=='stale':
                         assert content.get_attribute('data-cached')=='true'
                         assert '缓存' in content.get_attribute('title')
-                    assert frame.locator('.hotsearch-heat').first.is_visible()
+                    assert not frame.locator('.hotsearch-heat').first.is_visible()
                     square=page.frame_locator('#hotsearch-2x2')
                     assert not square.locator('.hotsearch-heat').first.is_visible()
                     assert square.locator('.hotsearch-title').nth(1).evaluate('e=>e.scrollWidth>e.clientWidth')

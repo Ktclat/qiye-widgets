@@ -67,13 +67,13 @@ html[data-theme=dark] .w-converter:has(.cv-card){--card-accent:#8bd7c0}
  .w-converter[data-display-size="1x2"] .cv-card-brand>.icon{display:block;width:20px;height:20px}
 }
 
-/* User's iTab references: source tabs and four visible news rows on 4x2/2x2.
+/* User's iTab square reference: quiet tabs and four readable news rows.
    Other sizes are icon launchers, without clipped headlines or extra controls. */
 .widget-inner.w-hotsearch[data-display-size]{font-family:Inter,"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;container:hotsearch-card / size;--w-bg:#f3f4f6;--w-fg:#303640;--w-muted:#727986;--hs-selected:#dddfe4;--card-accent:#dd7952;background:var(--w-bg);padding:clamp(7px,7.5cqb,14px);gap:6px}
 html[data-theme=dark] .widget-inner.w-hotsearch{--w-bg:#353a44;--w-fg:#f0f1f4;--w-muted:#a6abb5;--hs-selected:#5a5e68;--card-accent:#f0a184}
-.hs-card-tabs{position:relative;display:flex;align-items:center;gap:7px;flex:none;min-width:0;height:24px;overflow:auto hidden;overscroll-behavior-x:contain;scrollbar-width:none}
+.hs-card-tabs{position:relative;display:flex;align-items:center;gap:12px;flex:none;min-width:0;height:22px;overflow:auto hidden;overscroll-behavior-x:contain;scrollbar-width:none}
 .hs-card-tabs::-webkit-scrollbar,.hs-card-content::-webkit-scrollbar{display:none}
-.widget-inner .hs-card-tabs button{display:block;flex:none;min-width:0;max-width:100%;padding:2px 5px;border-radius:5px;font-size:14px;line-height:20px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.widget-inner .hs-card-tabs button{display:block;flex:none;min-width:0;max-width:100%;padding:1px 5px;border-radius:4px;font-size:13px;line-height:18px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .widget-inner .hs-card-tabs button[aria-selected=true]{background:var(--hs-selected)}
 .widget-inner .hs-card-tabs button:hover{background:var(--hs-selected)}
 .hs-card-content{flex:1;min-width:0;min-height:0;overflow:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;border-radius:3px}
@@ -82,17 +82,17 @@ html[data-theme=dark] .widget-inner.w-hotsearch{--w-bg:#353a44;--w-fg:#f0f1f4;--
 .hs-empty-mark{display:grid;place-items:center;color:var(--w-muted)}
 .hs-empty-mark .icon{width:24px;height:24px}
 .hs-card-content .hotsearch-rows{margin:0;padding:0;list-style:none}
-.hs-card-content .hotsearch-rows :is(a,.hotsearch-unlinked){height:calc((100cqb - 30px)/4);min-height:18px;padding:3px 0;gap:6px;line-height:1.4;border-radius:3px}
-.hs-card-content .hotsearch-title{min-width:0;font-size:clamp(12px,9.5cqb,15px);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hs-card-content .hotsearch-rank{width:12px;height:auto;flex:none;background:none;color:var(--w-muted);font-size:14px;font-weight:600}
+.hs-card-content .hotsearch-rows :is(a,.hotsearch-unlinked){height:calc((100cqb - 28px)/4);min-height:18px;padding:3px 0;gap:4px;line-height:1.4;border-radius:3px}
+.hs-card-content .hotsearch-title{min-width:0;font-size:clamp(12px,9cqb,13px);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hs-card-content .hotsearch-rank{width:12px;height:auto;flex:none;background:none;color:var(--w-muted);font-size:13px;font-weight:600}
 .hs-card-content .rank-1{color:var(--w-fg)}
 .hs-card-content .rank-2{color:color-mix(in srgb,var(--w-fg) 80%,var(--w-muted))}
-.hs-card-content .hotsearch-heat{flex:none;font-size:14px;color:var(--w-muted);max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums}
-.w-hotsearch:not([data-display-size="4x2"]) .hotsearch-heat{display:none}
+/* Heat remains in the full board; desktop cards give the headline this space. */
+.hs-card-content .hotsearch-heat{display:none}
 .widget-inner.w-hotsearch :is(button,a,.hs-card-content):focus-visible{outline:2px solid var(--w-muted);outline-offset:-2px}
 .widget-inner.w-hotsearch:is([data-display-size="1x1"],[data-display-size="1x2"],[data-display-size="2x1"]){padding:5px;gap:0}
 .widget-inner .hs-card-launcher{display:grid;place-items:center;width:100%;height:100%;min-width:0;min-height:0;border-radius:inherit}
 .hs-launcher-symbol{display:grid;place-items:center;color:var(--card-accent)}
 .hs-launcher-symbol .icon{width:clamp(20px,55cqmin,48px);height:clamp(20px,55cqmin,48px);stroke-width:1.7}
-@container hotsearch-card (max-width:135px){.hs-card-tabs{gap:3px}.widget-inner .hs-card-tabs button{font-size:11px;padding-inline:4px}.hs-card-content .hotsearch-heat{display:none}.hs-empty-mark{display:none}}
-@container hotsearch-card (max-height:95px){.hs-card-tabs{height:20px}.widget-inner .hs-card-tabs button{font-size:11px;line-height:16px}.hs-card-content .hotsearch-rows :is(a,.hotsearch-unlinked){height:calc((100cqb - 26px)/4);min-height:14px;padding:0;gap:4px}.hs-card-content .hotsearch-title,.hs-card-content .hotsearch-rank{font-size:10px}.hs-card-content .hotsearch-heat{font-size:10px}.hs-empty-mark{display:none}}
+@container hotsearch-card (max-width:135px){.hs-card-tabs{gap:3px}.widget-inner .hs-card-tabs button{font-size:11px;padding-inline:4px}.hs-empty-mark{display:none}}
+@container hotsearch-card (max-height:95px){.hs-card-tabs{height:20px}.widget-inner .hs-card-tabs button{font-size:11px;line-height:16px}.hs-card-content .hotsearch-rows :is(a,.hotsearch-unlinked){height:calc((100cqb - 26px)/4);min-height:14px;padding:0;gap:4px}.hs-card-content .hotsearch-title,.hs-card-content .hotsearch-rank{font-size:10px}.hs-empty-mark{display:none}}
