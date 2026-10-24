@@ -38,7 +38,7 @@ def open_widget(page, kind, theme='dark', width=1000, height=640, value='null'):
     page.wait_for_function('window.ready')
     return page.frame_locator('iframe')
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import base64
 
 checks=[]
@@ -61,7 +61,8 @@ with sync_playwright() as pw:
     page.on('pageerror',lambda error: errors.append(str(error)))
     page.route('https://**/*',lambda r:r.fulfill(status=200,content_type='application/json',body='{}',headers={'Access-Control-Allow-Origin':'*'}))
     fixed=datetime(2026,10,18,2,0,tzinfo=timezone.utc)
-    page.clock.install(time=fixed)
+    # Leave a little runway before pausing, even when the browser advances a tick.
+    page.clock.install(time=fixed-timedelta(seconds=1))
     page.clock.pause_at(fixed)
 
     for theme in ['dark','light']:

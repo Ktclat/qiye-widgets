@@ -1,5 +1,15 @@
 /* SPDX-License-Identifier: GPL-3.0-only */
 /* Shared controls. Keep these rules after individual workspaces. */
+/* Nested editors use the same slim chrome as their parent window. */
+:is(.life-editor,.bm-editor,.hotsearch-manager){--modal-padding:20px;--modal-surface:var(--app-pane);padding:0 var(--modal-padding) 20px;scroll-padding-top:62px}
+.bm-editor{--modal-surface:var(--app-bg)}
+:is(.life-editor,.bm-editor,.hotsearch-manager)>header{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;height:46px;min-height:46px;margin:0 calc(-1 * var(--modal-padding)) 18px;padding:0 12px 0 18px;border-bottom:1px solid var(--app-border);background:var(--modal-surface)}
+:is(.life-editor,.bm-editor,.hotsearch-manager)>header h3{flex:1;min-width:0;margin:0;font-size:14px;font-weight:600;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:is(.life-editor,.bm-editor,.hotsearch-manager)>header button{display:grid;place-items:center;flex:none;width:30px;height:30px;min-height:0;padding:7px;border:0;border-radius:8px;background:transparent;color:var(--app-muted)}
+:is(.life-editor,.bm-editor,.hotsearch-manager)>header button:hover{background:var(--app-field);color:var(--app-fg)}
+:is(.life-editor,.bm-editor,.hotsearch-manager)>header button>.icon{width:16px;height:16px}
+.hotsearch-manager-description{margin:0;color:var(--app-muted);font-size:12px;line-height:1.7}
+@media(max-width:520px){:is(.life-editor,.bm-editor,.hotsearch-manager){--modal-padding:14px}:is(.life-editor,.bm-editor,.hotsearch-manager)>header{padding-left:14px}}
 :root{--widget-control-size:32px;--widget-control-radius:9px;--widget-focus:var(--accent,#3988f7)}
 button,input,select,textarea{box-sizing:border-box}
 button:focus:not(:focus-visible),select:focus:not(:focus-visible){outline:none;box-shadow:none}

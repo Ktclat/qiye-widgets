@@ -6,8 +6,8 @@
   "name": "在线壁纸",
   "description": "浏览公开摄影图库，一键设为壁纸",
   "author": "Ktclat",
-  "release": "1.0.10",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.10/widget.html?widget=wallpaper",
+  "release": "1.0.11",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.11/widget.html?widget=wallpaper",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

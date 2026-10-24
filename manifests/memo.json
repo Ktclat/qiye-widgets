@@ -6,8 +6,8 @@
   "name": "备忘录",
   "description": "多条笔记、搜索、置顶与自动保存",
   "author": "Ktclat",
-  "release": "1.0.10",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.10/widget.html?widget=memo",
+  "release": "1.0.11",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.11/widget.html?widget=memo",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [
