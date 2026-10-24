@@ -87,7 +87,7 @@ test('paused widgets only fetch on explicit viewing, and reject malformed cached
   storage.setItem('qiye.hotsearch.v1',JSON.stringify({[HOTSEARCH_API+':zhihu']:{fetchedAt:now,updatedAt:now,items:[{title:'bad',url:'javascript:alert(1)',rank:1,heat:1}]}}));
   const client=createHotsearchClient({storage:()=>storage,now:()=>now,fetcher:async()=>{calls++;return payload('manual');}}),c=newWidgetConfig('hotsearch');
   assert.equal(client.state(c,'zhihu').data,null);await client.request(c,'zhihu');assert.equal(calls,0);
-  const html=hotsearchCard({config:c},DEFAULT_STATE);assert.match(html,/点击查看实时榜单/);assert.doesNotMatch(html,/点击启用/);
+  const html=hotsearchCard({id:'test',size:'4x2',config:c},DEFAULT_STATE);assert.match(html,/点击查看实时榜单/);assert.doesNotMatch(html,/点击启用/);
   const main=hotsearchMain({config:c},DEFAULT_STATE,{category:'subscribed',query:'',active:'zhihu',collapsed:new Set()});
   assert.match(main,/data-hot-board="zhihu"/);assert.doesNotMatch(main,/data-hot-action="enable"|hotsearch-welcome/);
   await client.request(c,'zhihu',{manual:true});assert.equal(calls,1);assert.equal(client.state(c,'zhihu').data.items[0].title,'manual');

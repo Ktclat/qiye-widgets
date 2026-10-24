@@ -6,8 +6,8 @@
   "name": "文件转换",
   "description": "PNG、JPG、WebP 图片批量转换，纯本地处理",
   "author": "Ktclat",
-  "release": "1.0.9",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.9/widget.html?widget=file-converter",
+  "release": "1.0.10",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.10/widget.html?widget=file-converter",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [

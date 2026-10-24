@@ -39,6 +39,10 @@ export const HOTSEARCH_SOURCES = [
 
 export const HOTSEARCH_DEFAULTS = {subscriptions:['zhihu','weibo','52pojie','github'], activeSource:'zhihu', layout:'list', enabled:false, apiBase:HOTSEARCH_API};
 export function hotsearchSource(id) { return HOTSEARCH_SOURCES.find(source => source.id === id); }
+// A window can browse an unsubscribed source; the desktop tabs stay subscribed.
+export function hotsearchCardSource(config) {
+  return hotsearchSource(config.subscriptions.includes(config.activeSource) ? config.activeSource : config.subscriptions[0] || config.activeSource);
+}
 export function hotsearchApiBase(value) {
   const url = new URL(publicHttpsUrl(value));
   if (url.search || url.hash) throw new Error(t('数据源地址不能包含查询参数或片段。'));

@@ -2,7 +2,7 @@
 import { t } from './i18n.js';
 import { icon } from './icons.js';
 import { requestPublicOrigin } from './public-json.js';
-import { hotsearchApiBase, hotsearchSource, filterHotsearchSources, moveHotsearchSubscription } from './hotsearch-sources.js';
+import { hotsearchApiBase, hotsearchSource, hotsearchCardSource, filterHotsearchSources, moveHotsearchSubscription } from './hotsearch-sources.js';
 import { hotsearchClient } from './hotsearch-data.js';
 import { hotsearchSidebar, hotsearchMain, hotsearchManager, hotsearchCard, bindHotsearchLogos } from './hotsearch-view.js';
 
@@ -273,22 +273,94 @@ export function bindHotsearchWorkspace(root, initial, host) {
 }
 
 export function bindHotsearchCards(container,host) {
-  const controller=new AbortController(), pending=new Map();
+  const controller=new AbortController(), pending=new Map(), selections=new Map(), saving=new Set();
+  const options={signal:controller.signal};
   const roots=()=>container.querySelectorAll('[data-widget=hotsearch]:not([data-compact])');
   const current=root=>host.getState().items.find(item=>item.id===root.dataset.widgetId);
   const alive=root=>!controller.signal.aborted && root.isConnected && !!current(root);
-  function render(root) { if(alive(root)){root.innerHTML=hotsearchCard(current(root),host.getState());bindHotsearchLogos(root);} }
+  function revealTab(tab) {
+    if(!tab)return;
+    const strip=tab.parentElement, left=tab.getBoundingClientRect().left-strip.getBoundingClientRect().left+strip.scrollLeft;
+    if(left<strip.scrollLeft)strip.scrollLeft=left;
+    else if(left+tab.offsetWidth>strip.scrollLeft+strip.clientWidth)strip.scrollLeft=left+tab.offsetWidth-strip.clientWidth;
+  }
+  function render(root) {
+    if(!alive(root))return;
+    const html=hotsearchCard(current(root),host.getState());
+    if(root.innerHTML===html)return;
+    const active=document.activeElement, focused=root.contains(active), tab=focused&&active.dataset.hotCardSource;
+    const panel=root.querySelector('.hs-card-content:not([hidden])'), source=panel?.dataset.hotCardPanel, scroll=panel?.scrollTop || 0;
+    const panelFocused=active===panel, link=focused&&active.closest('a')?.getAttribute('href');
+    const tabScroll=root.querySelector('.hs-card-tabs')?.scrollLeft || 0;
+    root.innerHTML=html;
+    const strip=root.querySelector('.hs-card-tabs'), nextPanel=root.querySelector('.hs-card-content:not([hidden])');
+    if(strip)strip.scrollLeft=tabScroll;
+    if(nextPanel?.dataset.hotCardPanel===source)nextPanel.scrollTop=scroll;
+    let target=tab ? [...root.querySelectorAll('[data-hot-card-source]')].find(node=>node.dataset.hotCardSource===tab) : null;
+    if(target)for(const node of strip.children)node.tabIndex=node===target?0:-1;
+    else if(panelFocused)target=nextPanel;
+    else if(link)target=[...root.querySelectorAll('a')].find(node=>node.getAttribute('href')===link);
+    target?.focus({preventScroll:true});
+    revealTab(tab?target:root.querySelector('[role=tab][aria-selected=true]'));
+  }
   async function load(root,manual=false) {
     if(!alive(root))return;
-    const item=current(root);if(!item.config.enabled&&!manual||!item.config.subscriptions.length)return;
-    const key=item.config.apiBase+':'+item.config.activeSource, previous=pending.get(root);
+    const item=current(root);
+    // Icon launchers have no list to refresh. Opening their window still loads it.
+    if(!['4x2','2x2'].includes(item.size) || !item.config.enabled&&!manual || !item.config.subscriptions.length)return;
+    const source=hotsearchCardSource(item.config), key=item.config.apiBase+':'+source.id, previous=pending.get(root);
     if(previous?.key===key)return;
     previous?.controller.abort();
     const entry={key,controller:new AbortController()};pending.set(root,entry);
-    try { const job=hotsearchClient.request(item.config,item.config.activeSource,{manual,signal:entry.controller.signal});render(root);await job;if(pending.get(root)===entry)render(root); }
+    try { const job=hotsearchClient.request(item.config,source.id,{manual,signal:entry.controller.signal});render(root);await job;if(pending.get(root)===entry)render(root); }
     finally {if(pending.get(root)===entry)pending.delete(root);}
   }
+  async function select(root,id) {
+    if(!alive(root) || !current(root).config.subscriptions.includes(id))return;
+    selections.set(root,id);
+    if(saving.has(root))return;
+    saving.add(root);
+    try {
+      // Serialize settings writes and retain the last click during a slow save.
+      while(alive(root) && selections.has(root)) {
+        const next=selections.get(root);selections.delete(root);
+        const item=current(root);
+        if(!item.config.subscriptions.includes(next))continue;
+        if(item.config.activeSource===next){void load(root,true);continue;}
+        try {
+          const saved=host.saveSettings(item.id,{title:item.title,config:{...item.config,activeSource:next}},JSON.stringify([item.title,item.config]));
+          render(root);void load(root,true);await saved;
+        } catch(error) {
+          pending.get(root)?.controller.abort();pending.delete(root);
+          if(alive(root)){host.toast?.(error.message || t('保存失败，请重试'));render(root);}
+        }
+      }
+    } finally {saving.delete(root);}
+  }
+  container.addEventListener('click',event=>{
+    const tab=event.target.closest('[data-hot-card-source]'),root=tab?.closest('[data-widget=hotsearch]');
+    if(!root)return;
+    event.preventDefault();event.stopPropagation();void select(root,tab.dataset.hotCardSource);
+  },options);
+  container.addEventListener('keydown',event=>{
+    const tab=event.target.closest('[data-hot-card-source]');
+    if(tab && ['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) {
+      event.preventDefault();event.stopPropagation();
+      const tabs=[...tab.parentElement.children], index=tabs.indexOf(tab);
+      const next=tabs[event.key==='Home'?0:event.key==='End'?tabs.length-1:(index+(event.key==='ArrowLeft'?-1:1)+tabs.length)%tabs.length];
+      for(const node of tabs)node.tabIndex=node===next?0:-1;
+      next.focus({preventScroll:true});revealTab(next);
+    } else if(event.key==='Enter' && event.target.matches('.hs-card-content')) {
+      event.preventDefault();event.stopPropagation();
+      const item=current(event.target.closest('[data-widget=hotsearch]'));if(item)host.openDialog('widget-detail',{item});
+    }
+  },options);
+  container.addEventListener('focusout',event=>{
+    const strip=event.target.closest('.hs-card-tabs');
+    if(strip && !strip.contains(event.relatedTarget))for(const tab of strip.children)tab.tabIndex=tab.getAttribute('aria-selected')==='true'?0:-1;
+  },options);
   const tick=()=>{if(!globalThis.document?.hidden)for(const root of roots())void load(root);};
   const timer=setInterval(tick,60000);tick();
-  return ()=>{controller.abort();for(const entry of pending.values())entry.controller.abort();pending.clear();clearInterval(timer);};
+  for(const root of roots())revealTab(root.querySelector('[role=tab][aria-selected=true]'));
+  return ()=>{controller.abort();selections.clear();for(const entry of pending.values())entry.controller.abort();pending.clear();clearInterval(timer);};
 }
