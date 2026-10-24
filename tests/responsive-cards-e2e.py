@@ -42,7 +42,7 @@ with sync_playwright() as pw:
                       const envelope=structuredClone(defaults[kind]);
                       if(kind==='hotsearch')envelope.config.enabled=['error','live','stale'].includes(mode);
                       const now=Date.now(),old=mode==='stale'?now-1200000:now;
-                      const rows=['今天值得关注的科技新进展','一条足够长的榜单标题需要在小卡片里自然截断且不挤走排名与热度','第三条测试新闻','第四条测试新闻'].map((title,i)=>({rank:i+1,title,url:'https://example.com/story/'+i,heat:34567-i}));
+                      const rows=['今天值得关注的科技新进展','一条足够长的榜单标题需要在小卡片里自然截断且不挤走排名与热度',...Array.from({length:18},(_,i)=>'第'+(i+3)+'条测试新闻')].map((title,i)=>({rank:i+1,title,url:'https://example.com/story/'+i,heat:34567-i}));
                       const storage=kind==='hotsearch'&&['cached','stale'].includes(mode)?{'qiye.hotsearch.v1':JSON.stringify({'https://uapis.cn:zhihu':{items:rows,fetchedAt:old,updatedAt:old}})}:{};
                       const figure=document.createElement('figure'),frame=document.createElement('iframe'),caption=document.createElement('figcaption');
                       frame.id=id;frame.title=id;frame.sandbox='allow-scripts allow-forms allow-downloads';frame.style.width=width+'px';frame.style.height=height+'px';frame.src=base+'/releases/'+version+'/widget.html?widget='+kind;
@@ -70,7 +70,7 @@ with sync_playwright() as pw:
                             elif mode=='error': frame.get_by_text('榜单暂不可用').wait_for(state='attached')
                         result=frame.locator('.widget-inner').evaluate('''root=>{
                           const box=root.getBoundingClientRect(),visible=e=>!!e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden';
-                          const bad=[...root.querySelectorAll('button, .cv-card-brand, .cv-card-equation, .cv-card-from, .cv-card-to, .hs-card-heading, .hs-card-empty, .hotsearch-rows a')].filter(visible).filter(e=>{const r=e.getBoundingClientRect();return r.left<box.left-1||r.right>box.right+1||r.top<box.top-1||r.bottom>box.bottom+1;}).map(e=>e.className);
+                          const bad=[...root.querySelectorAll('button, .cv-card-brand, .cv-card-equation, .cv-card-from, .cv-card-to, .hs-card-heading, .hs-card-empty')].filter(visible).filter(e=>{const r=e.getBoundingClientRect();return r.left<box.left-1||r.right>box.right+1||r.top<box.top-1||r.bottom>box.bottom+1;}).map(e=>e.className);
                           return {bad,scroll:root.scrollWidth>root.clientWidth+1||root.scrollHeight>root.clientHeight+1,text:root.textContent};
                         }''')
                         if result['bad'] or result['scroll']: page.screenshot(path=str(OUT/'overflow.png'), full_page=True)
@@ -78,6 +78,19 @@ with sync_playwright() as pw:
                         assert 'undefined' not in result['text'], result
                         assert frame.locator('select,[data-action="widget-config"],.widget-drag-handle').count()==0
                         checks+=1
+                if cell==74 and mode in ['live','cached','stale']:
+                    frame=page.frame_locator('#hotsearch-4x2')
+                    content=frame.locator('.hs-card-content')
+                    assert frame.locator('.hotsearch-rows li').count()==20
+                    metrics=content.evaluate("""e=>{const b=e.getBoundingClientRect();return {visible:[...e.querySelectorAll('li')].filter(n=>{const r=n.getBoundingClientRect();return r.top>=b.top-1&&r.bottom<=b.bottom+1}).length,x:e.scrollWidth>e.clientWidth+1,y:e.scrollHeight>e.clientHeight};}""")
+                    assert 4<=metrics['visible']<=5 and metrics['y'] and not metrics['x'],metrics
+                    content.focus();content.press('End')
+                    actual=page.locator('#hotsearch-4x2').element_handle().content_frame()
+                    actual.wait_for_function("(()=>{const e=document.querySelector('.hs-card-content');return Math.abs(e.scrollTop-(e.scrollHeight-e.clientHeight))<1})()")
+                    assert content.evaluate('e=>e.tabIndex')==0
+                    content.evaluate("e=>{e.blur();e.scrollTo({top:0,behavior:'instant'});}")
+                    actual.wait_for_function("document.querySelector('.hs-card-content').scrollTop===0")
+                    if mode=='stale': assert frame.locator('.hs-card-source').inner_text()=='缓存'
                 if cell==74 and mode in ['idle','cached','error','stale']:
                     page.screenshot(path=str(OUT/f'{theme}-{mode}.png'), full_page=True)
                 if cell==74 and mode=='idle':

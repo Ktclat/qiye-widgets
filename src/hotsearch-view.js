@@ -66,13 +66,13 @@ export function hotsearchCard(item, state) {
   const source = hotsearchSource(item.config.activeSource), status = hotsearchClient.state(item.config,source.id);
   const subscribed = item.config.subscriptions.length > 0;
   const hasRows = subscribed && Boolean(status.data?.items.length);
-  const limit = item.size === '4x2' ? 4 : item.size === '2x2' ? 3 : 1;
+  const limit = ['4x2','2x2'].includes(item.size) ? 20 : 1;
   const message = !subscribed ? '还没有订阅榜单' : status.status === 'error' ? '榜单暂不可用'
     : status.data ? '这个榜单暂时没有内容。' : status.status === 'loading' || item.config.enabled ? '正在加载榜单…' : '点击查看实时榜单';
   const content = hasRows ? hotsearchRows(status.data,source,state,limit)
-    : `<button type="button" class="hs-card-empty" data-action="widget-open" aria-label="${t('打开热搜榜')}"><strong>${esc(t(subscribed ? source.name : '我的订阅'))}</strong><span>${esc(t(message))}</span></button>`;
+    : `<button type="button" class="hs-card-empty" data-action="widget-open" aria-label="${t('打开热搜榜')}"><span class="hs-empty-mark" aria-hidden="true">${icon('trending')}</span><span>${esc(t(message))}</span></button>`;
   const cached = hasRows && (status.status === 'error' || Date.now()-status.data.fetchedAt >= HOTSEARCH_TTL);
-  return `<button type="button" class="hs-card-heading" data-action="widget-open" aria-label="${t('打开热搜榜')}">${icon('trending')}<strong>${esc(item.title)}</strong><span class="hs-card-source">${esc(t(source.name))}</span></button><div class="hs-card-content" data-has-rows="${hasRows}">${content}</div><span class="hs-card-footer">${hasRows ? esc(timestamp(status.data))+(cached?' · '+t('缓存'):'') : t('订阅你关心的每一份热榜')}</span>`;
+  return `<button type="button" class="hs-card-heading" data-action="widget-open" aria-label="${t('打开热搜榜')}" title="${hasRows ? esc(timestamp(status.data)) : esc(item.title || t('热搜榜'))}">${hotsearchLogo(source)}<strong>${esc(t(source.name))}</strong><span class="hs-card-source">${cached && item.size!=='1x1' ? t('缓存') : esc(item.title || t('热搜榜'))}</span></button><div class="hs-card-content" data-has-rows="${hasRows}"${hasRows && limit > 1 ? ` tabindex="0" role="region" aria-label="${esc(t(source.name))} · ${t('热搜榜')}"` : ''}>${content}</div>`;
 }
 
 export function refreshHotsearchCards(container, state) {

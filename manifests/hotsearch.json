@@ -6,16 +6,16 @@
   "name": "热搜榜",
   "description": "订阅全网热榜，分类浏览与实时更新",
   "author": "Ktclat",
-  "release": "1.0.8",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.8/widget.html?widget=hotsearch",
+  "release": "1.0.9",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.9/widget.html?widget=hotsearch",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [
-    "1x1",
-    "1x2",
-    "2x1",
+    "4x2",
     "2x2",
-    "4x2"
+    "1x1",
+    "2x1",
+    "1x2"
   ],
   "previews": [],
   "capabilities": []
