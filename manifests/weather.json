@@ -6,8 +6,8 @@
   "name": "天气",
   "description": "启用后显示城市的实时天气",
   "author": "Ktclat",
-  "release": "1.0.8",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.8/widget.html?widget=weather",
+  "release": "1.0.9",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.9/widget.html?widget=weather",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [
