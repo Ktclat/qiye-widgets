@@ -4,7 +4,7 @@ import { escapeText as esc } from './html.js';
 import { icon } from './icons.js';
 import { bindFaviconImages } from './favicon-view.js';
 import { windowControls } from './widget-app-controls.js';
-import { HOTSEARCH_CATEGORIES, hotsearchSource, filterHotsearchSources } from './hotsearch-sources.js';
+import { HOTSEARCH_CATEGORIES, hotsearchCardSource, filterHotsearchSources, hotsearchSource } from './hotsearch-sources.js';
 import { hotsearchClient, hotsearchHeat, HOTSEARCH_TTL } from './hotsearch-data.js';
 
 export function hotsearchLogo(source) {
@@ -63,16 +63,21 @@ export function hotsearchWorkspace(item) {
   </section>`;
 }
 export function hotsearchCard(item, state) {
-  const source = hotsearchSource(item.config.activeSource), status = hotsearchClient.state(item.config,source.id);
-  const subscribed = item.config.subscriptions.length > 0;
-  const hasRows = subscribed && Boolean(status.data?.items.length);
-  const limit = ['4x2','2x2'].includes(item.size) ? 20 : 1;
-  const message = !subscribed ? '还没有订阅榜单' : status.status === 'error' ? '榜单暂不可用'
+  if (!['4x2','2x2'].includes(item.size)) {
+    return `<button type="button" class="hs-card-launcher" data-action="widget-open" aria-label="${t('打开热搜榜')}" title="${esc(item.title || t('热搜榜'))}"><span class="hs-launcher-symbol" aria-hidden="true">${icon('trending')}</span></button>`;
+  }
+  const sources = filterHotsearchSources(item.config), source = hotsearchCardSource(item.config);
+  const status = hotsearchClient.state(item.config,source.id);
+  const hasRows = sources.length > 0 && Boolean(status.data?.items.length);
+  const message = !sources.length ? '还没有订阅榜单' : status.status === 'error' ? '榜单暂不可用'
     : status.data ? '这个榜单暂时没有内容。' : status.status === 'loading' || item.config.enabled ? '正在加载榜单…' : '点击查看实时榜单';
-  const content = hasRows ? hotsearchRows(status.data,source,state,limit)
-    : `<button type="button" class="hs-card-empty" data-action="widget-open" aria-label="${t('打开热搜榜')}"><span class="hs-empty-mark" aria-hidden="true">${icon('trending')}</span><span>${esc(t(message))}</span></button>`;
+  const content = hasRows ? hotsearchRows(status.data,source,state,20)
+    : `<button type="button" class="hs-card-empty" data-action="widget-open" aria-label="${t('打开热搜榜')}" title="${esc(status.error || '')}"><span class="hs-empty-mark" aria-hidden="true">${icon('trending')}</span><span>${esc(t(message))}</span></button>`;
+  if (!sources.length) return `<div class="hs-card-content">${content}</div>`;
   const cached = hasRows && (status.status === 'error' || Date.now()-status.data.fetchedAt >= HOTSEARCH_TTL);
-  return `<button type="button" class="hs-card-heading" data-action="widget-open" aria-label="${t('打开热搜榜')}" title="${hasRows ? esc(timestamp(status.data)) : esc(item.title || t('热搜榜'))}">${hotsearchLogo(source)}<strong>${esc(t(source.name))}</strong><span class="hs-card-source">${cached && item.size!=='1x1' ? t('缓存') : esc(item.title || t('热搜榜'))}</span></button><div class="hs-card-content" data-has-rows="${hasRows}"${hasRows && limit > 1 ? ` tabindex="0" role="region" aria-label="${esc(t(source.name))} · ${t('热搜榜')}"` : ''}>${content}</div>`;
+  const description = hasRows ? timestamp(status.data)+(cached?' · '+t('正在显示上次缓存。'):'') : t(message);
+  const id = 'hs-'+esc(item.id || 'card');
+  return `<div class="hs-card-tabs" role="tablist" aria-label="${t('榜单平台')}">${sources.map(tab => `<button type="button" role="tab" id="${id}-${tab.id}-tab" data-hot-card-source="${tab.id}" aria-selected="${tab.id===source.id}" aria-controls="${id}-${tab.id}-panel" tabindex="${tab.id===source.id?0:-1}" title="${esc(t(tab.name))}">${esc(t(tab.name))}</button>`).join('')}</div>${sources.map(tab => `<div id="${id}-${tab.id}-panel" class="hs-card-content" role="tabpanel" aria-labelledby="${id}-${tab.id}-tab" tabindex="0" data-hot-card-panel="${tab.id}"${tab.id===source.id?` data-cached="${cached}" aria-busy="${status.status==='loading'}" title="${esc(description)}"`:' hidden'}>${tab.id===source.id?content:''}</div>`).join('')}`;
 }
 
 export function refreshHotsearchCards(container, state) {
