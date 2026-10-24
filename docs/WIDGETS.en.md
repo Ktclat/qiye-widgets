@@ -1,5 +1,11 @@
 # Widget development documentation
 
+## Hot-list initial loading (1.0.13, 2026-10-24)
+
+The real host update check exposed a bootstrap ordering issue: mounting an uncached hot-list synchronously sent `hotboard` before the bundle's `ready` message, so the host discarded the call. Following [MDN microtask ordering](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide) and [MessagePort.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort/postMessage), bridge calls now send in a microtask after synchronous initialization, placing readiness first on the same port. Host readiness checks, permissions and storage stay intact.
+
+The runtime fixture rejects and records calls before readiness and checks the first hot-list render with deterministic data. It reproduces the failure with the previous build. Version **1.0.13** retains 1.0.12 typography and historical releases; existing host 0.10.14 installations update their widgets through source details.
+
 ## Compact hot-list typography (1.0.12, 2026-10-24)
 
 The user identifies P1 as the iTab square reference and P2 as Qiye's current wide card. P1 sets the visual baseline: small platform labels, four evenly spaced ranked headlines and a quiet selected tab. Both 2×2 and 4×2 now use 13px labels/headlines with weights 500/400, a 22px tab strip and 4px rank-to-title spacing. Desktop cards give the headline the full remaining width; heat stays in the full board window. Small grids and the other three icon-launcher sizes retain their existing adaptations.

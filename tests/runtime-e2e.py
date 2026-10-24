@@ -25,13 +25,17 @@ with sync_playwright() as pw:
      w,h=map(int,size.split('x'));width=w*60+(w-1)*30 if mode=='card' else 1000;height=h*60+(h-1)*30 if mode=='card' else 700
      page.goto(base+'/index.html')
      page.evaluate("""({url,width,height,kind,size,mode,theme,settings})=>{
-      document.body.replaceChildren();window.ready=false;window.calls=[];const iframe=document.createElement('iframe');iframe.sandbox='allow-scripts allow-forms allow-downloads';iframe.style.cssText=`border:0;width:${width}px;height:${height}px`;iframe.src=url;
-      iframe.addEventListener('load',()=>{const channel=new MessageChannel();window.port=channel.port1;let revision='null';port.onmessage=event=>{const m=event.data;if(m.type==='ready'){window.ready=true;return;}if(m.type==='call'){calls.push(m);let value=true;if(m.method==='save'){if(m.params.expected!==revision){port.postMessage({type:'result',id:m.id,error:'Conflict'});return;}revision=JSON.stringify(m.params.value);value={value:revision,revision};}port.postMessage({type:'result',id:m.id,value});}};iframe.contentWindow.postMessage({type:'qiye:init',version:2,value:'null',revision:'null',storage:{},item:{id:'test',title:kind,size},environment:{mode,theme,size,locale:'zh-CN',width,height,settings:{...settings,theme}}},'*',[channel.port2]);});document.body.append(iframe);
+      document.body.replaceChildren();window.ready=false;window.calls=[];window.earlyCalls=[];const iframe=document.createElement('iframe');iframe.sandbox='allow-scripts allow-forms allow-downloads';iframe.style.cssText=`border:0;width:${width}px;height:${height}px`;iframe.src=url;
+      iframe.addEventListener('load',()=>{const channel=new MessageChannel();window.port=channel.port1;let revision=kind==='hotsearch'?JSON.stringify({config:{subscriptions:['zhihu','weibo'],activeSource:'zhihu',layout:'list',enabled:true,apiBase:'https://uapis.cn'},data:{}}):'null';port.onmessage=event=>{const m=event.data;if(m.type==='ready'){window.ready=true;return;}if(m.type==='call'){if(!window.ready){earlyCalls.push(m.method);return;}calls.push(m);let value=true;if(m.method==='hotboard')value={code:200,list:[{index:1,title:'首次加载榜单',url:'https://example.com/news',hot_value:1200}]};if(m.method==='save'){if(m.params.expected!==revision){port.postMessage({type:'result',id:m.id,error:'Conflict'});return;}revision=JSON.stringify(m.params.value);value={value:revision,revision};}port.postMessage({type:'result',id:m.id,value});}};iframe.contentWindow.postMessage({type:'qiye:init',version:2,value:revision,revision,storage:{},item:{id:'test',title:kind,size},environment:{mode,theme,size,locale:'zh-CN',width,height,hostFeatures:['hotboard'],settings:{...settings,theme}}},'*',[channel.port2]);});document.body.append(iframe);
      }""",{'url':base+'/releases/'+m['release']+'/widget.html?widget='+kind,'width':width,'height':height,'kind':kind,'size':size,'mode':mode,'theme':theme,'settings':settings})
      try:page.wait_for_function('window.ready')
      except Exception:
       print('FAILED',kind,mode,theme,size,errors,flush=True);print(page.frames[-1].locator('body').inner_text(),flush=True);raise
      frame=page.frame_locator('iframe');assert frame.locator('#widget-root').inner_html()
+     assert page.evaluate('earlyCalls')==[],(kind,mode,size,'Host calls before ready',page.evaluate('earlyCalls'))
+     if kind=='hotsearch' and (mode=='window' or size in ['2x2','4x2']):
+      frame.locator('.hotsearch-title').first.wait_for()
+      assert frame.locator('.hotsearch-title').first.inner_text()=='首次加载榜单'
      assert not errors,(kind,mode,size,errors)
      if mode=='card':
       rect=frame.locator('#widget-root').bounding_box();assert abs(rect['width']-width)<2 and abs(rect['height']-height)<2,(kind,size,rect)

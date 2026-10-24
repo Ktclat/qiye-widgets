@@ -4,7 +4,9 @@ window.addEventListener('message',function initialize(event){
  window.removeEventListener('message',initialize);
  const port=event.ports[0],pending=new Map();let sequence=0,storage={...event.data.storage},storageTimer;
  const bridge={init:event.data,port,onState:null,call(method,params={}){
-  return new Promise((resolve,reject)=>{const id=String(++sequence);const timeout=setTimeout(()=>{pending.delete(id);reject(new Error('Host response timed out'));},15000);pending.set(id,{resolve,reject,timeout});port.postMessage({type:'call',id,method,params});});
+  // Initial render can call the host before the bundle posts its ready message.
+  // Send calls after this synchronous bootstrap so the host accepts them in order.
+  return Promise.resolve().then(()=>new Promise((resolve,reject)=>{const id=String(++sequence);const timeout=setTimeout(()=>{pending.delete(id);reject(new Error('Host response timed out'));},15000);pending.set(id,{resolve,reject,timeout});port.postMessage({type:'call',id,method,params});}));
  }};
  port.onmessage=async event=>{const message=event.data;if(message.type==='drag-state'){bridge.onDragState?.(message);return;}if(message.type==='command'){bridge.onCommand?.(message.command);return;}if(message.type==='flush'){try{await bridge.flush?.();port.postMessage({type:'flushed'});}catch(error){port.postMessage({type:'flushed',error:error.message});}return;}if(message.type==='view'){try{if(!bridge.onView)throw new Error('View switching unavailable');await bridge.onView(message);port.postMessage({type:'view-ready',id:message.id});}catch(error){port.postMessage({type:'view-ready',id:message.id,error:error.message});}return;}if(message.type==='state'){bridge.onState?.(message);return;}const job=pending.get(message.id);if(message.type!=='result'||!job)return;clearTimeout(job.timeout);pending.delete(message.id);message.error?job.reject(new Error(message.error)):job.resolve(message.value);};
  const persist=()=>{clearTimeout(storageTimer);storageTimer=setTimeout(()=>bridge.call('storage',{value:storage}).catch(error=>bridge.call('toast',{message:error.message})),150);};

@@ -1,6 +1,6 @@
 {
   "name": "qiye-widgets",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": true,
   "type": "module",
   "description": "Independent Qiye widgets, manifests, assets and releases",

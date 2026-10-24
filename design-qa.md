@@ -1,6 +1,6 @@
 # Hotsearch compact card — design QA
 
-Date: 2026-10-24. Release: 1.0.12.
+Date: 2026-10-24. Release: 1.0.13 (1.0.12 typography plus initial-loading fix).
 
 ## Reference and scope
 
@@ -21,9 +21,11 @@ Production iframe captures at deviceScaleFactor 1 are under `../qiye/output/play
 
 - `tests/responsive-cards-e2e.py`: 330 checks across five sizes, two themes, three grid sizes and five data states. Existing keyboard activation, scrolling, persistent source selection, cache reload, failed-save rollback, rapid clicks and late-response cases pass.
 - 207 unit tests, 19-manifest validation and immutable build test pass.
-- Host integration with production 1.0.12 artifacts passes context-menu dismissal and focus, component-specific actions, size changes, note persistence after dragging, window/settings return and the production hotboard API.
+- Host integration with production 1.0.12 artifacts passes context-menu dismissal and focus, component-specific actions, size changes, note persistence after dragging, window/settings return and the production hotboard API. The 1.0.13 build additionally passes the real-host 1.0.11-to-1.0.13 update, first load, full-window heat/header, tab persistence and narrow light-theme resize checks using the production hotboard API.
 - Full-window heat and the public installation/update path are checked during publication. The release workflow also runs the existing all-widget, window/date-time, cache, view-switch and control regressions.
 
-Sources and decisions: [widget documentation](docs/WIDGETS.md). Independent version 1.0.12 preserves historical releases. Existing instances update explicitly through source details; host 0.10.14 remains compatible.
+Publication checks reproduced an uncached startup request sent before the host's readiness handshake. The runtime regression now rejects early calls, fails with the old build, and verifies a first-rendered headline after the bridge ordering correction. Source-update checks pass both with clearly labeled API fixtures and with the production API; fixture screenshots are sample data, not current news.
+
+Sources and decisions: [widget documentation](docs/WIDGETS.md). Independent version 1.0.13 preserves historical releases. Existing instances update explicitly through source details; host 0.10.14 remains compatible.
 
 Local visual and interaction result: passed. Public asset equality and browser checks are recorded in the delivery verification artifacts after publication.

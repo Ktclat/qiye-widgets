@@ -6,8 +6,8 @@
   "name": "日历",
   "description": "公历月份与中国农历",
   "author": "Ktclat",
-  "release": "1.0.12",
-  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.12/widget.html?widget=calendar",
+  "release": "1.0.13",
+  "entry": "https://ktclat.github.io/qiye-widgets/releases/1.0.13/widget.html?widget=calendar",
   "repository": "https://github.com/Ktclat/qiye-widgets",
   "license": "GPL-3.0-only",
   "sizes": [
