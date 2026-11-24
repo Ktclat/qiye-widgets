@@ -16,4 +16,6 @@ npm run build
 
 发布使用本仓库独立的 `vX.Y.Z` 标签。目录指向 `/releases/X.Y.Z/widget.html` 的固定版本。更新目录后，已添加的组件需手动更新；旧版本页面保留以便回退。组件发布不触发主程序构建或版本更新。
 
+如需重新部署已发布的目录与历史组件，在 Actions 的 **Verify and publish widgets** 中选择 **Run workflow → main**。工作流校验通过后，从 `gh-pages` 获取已构建的静态文件并发布。若只有部署作业失败，可单独重跑该作业，继续使用已上传的同一份文件。
+
 完整协议、开发和发布说明见 [架构说明](docs/ARCHITECTURE.md)。原生组件实现及研究记录见 [组件文档](docs/WIDGETS.md)。组件实现迁移自 qiye 提交 `018b3b1`。本仓库原创代码统一使用 **GPL-3.0-only**，与 [主程序](https://github.com/Ktclat/qiye) 一致，完整许可见 [LICENSE](LICENSE)。发布包从 LICENSE 生成同一许可证的兼容副本 LICENSE-GPL-3.0；第三方代码、字体及素材遵循各自的原许可证，详见 [第三方声明](docs/THIRD_PARTY.md)。
