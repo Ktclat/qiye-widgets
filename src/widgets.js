@@ -54,6 +54,7 @@ export function escapeHtml(value = '') {
 const icons = {
   code: '<path d="m8 7-5 5 5 5m8-10 5 5-5 5M14 4l-4 16"/>',
   settings: iconPaths.settings,
+  edit: iconPaths.edit,
   more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
   chevronLeft: '<path d="m14 6-6 6 6 6"/>',
   chevronRight: '<path d="m10 6 6 6-6 6"/>',
@@ -122,9 +123,15 @@ function renderNotes(data) {
   return `${header(t("随手记"), 'note')}<textarea class="w-notes-input" data-widget-input="notes" aria-label="${t("便签内容")}" placeholder="${t("写下一点灵感，\n或今天想做的小事…")}" maxlength="100000" spellcheck="false">${escapeHtml(data.notes)}</textarea><div class="w-notes-footer"><span data-live="notes-status">${t("已保存在本机")}</span><span class="w-notes-fold" aria-hidden="true"></span></div>`;
 }
 
-function todoList(state) {
-  const todos = state.todos;
-  return todos.length ? todos.map((todo) => `<li class="w-todo-row${todo.done ? ' is-done' : ''}"><label><input type="checkbox" data-action="widget-todo-toggle" data-todo-id="${escapeHtml(todo.id)}"${todo.done ? ' checked' : ''} aria-label="${escapeHtml(`${todo.done ? t("取消完成") : t("完成")}：${todo.text}`)}"><span title="${escapeHtml(todo.text)}">${escapeHtml(todo.text)}</span></label><button type="button" class="widget-icon-button w-row-delete" data-action="widget-todo-delete" data-todo-id="${escapeHtml(todo.id)}" aria-label="${escapeHtml(`${t("删除：{v0}", {v0: todo.text})}`)}">${icon('close')}</button></li>`).join('') : `<li class="w-empty-list">${t("给今天安排一件小事")}</li>`;
+function todoRow(todo, editable) {
+  const id = escapeHtml(todo.id), text = escapeHtml(todo.text);
+  const label = escapeHtml(t('编辑：{v0}', {v0:todo.text}));
+  const edit = editable ? `<button type="button" class="widget-icon-button" data-todo-edit="${id}" aria-label="${label}" title="${t('编辑待办')}">${icon('edit')}</button>` : '';
+  return `<li class="w-todo-row${todo.done ? ' is-done' : ''}" data-todo-row="${id}"><label><input type="checkbox" data-action="widget-todo-toggle" data-todo-id="${id}"${todo.done ? ' checked' : ''} aria-label="${todo.done ? t('取消完成') : t('完成')}：${text}"><span title="${text}">${text}</span></label>${edit}<button type="button" class="widget-icon-button w-row-delete" data-action="widget-todo-delete" data-todo-id="${id}" aria-label="${escapeHtml(t('删除：{v0}', {v0:todo.text}))}">${icon('close')}</button></li>`;
+}
+
+function todoList(state, editable) {
+  return state.todos.length ? state.todos.map(todo => todoRow(todo, editable)).join('') : `<li class="w-empty-list">${t('给今天安排一件小事')}</li>`;
 }
 
 function todoSummary(state) {
@@ -132,8 +139,8 @@ function todoSummary(state) {
   return `${todos.filter((todo) => todo.done).length}/${todos.length}`;
 }
 
-function renderTodo(state) {
-  return `${header(t("今日待办"), 'check', '<span class="w-todo-summary" data-live="todo-summary">' + todoSummary(state) + '</span>')}<ul class="w-todo-list" data-live="todo-list">${todoList(state)}</ul><form class="w-inline-form" data-widget-form="todo"><input type="text" name="text" autocomplete="off" maxlength="240" placeholder="${t("添加一项待办")}" aria-label="${t("新待办")}"><button type="submit" class="widget-icon-button" aria-label="${t("添加待办")}">${icon('plus')}</button></form>`;
+export function renderTodo(state, editable = false) {
+  return `${header(t("今日待办"), 'check', '<span class="w-todo-summary" data-live="todo-summary">' + todoSummary(state) + '</span>')}<ul class="w-todo-list" data-live="todo-list"${editable ? ' data-editable' : ''}>${todoList(state, editable)}</ul><form class="w-inline-form" data-widget-form="todo"><input type="text" name="text" autocomplete="off" maxlength="240" placeholder="${t("添加一项待办")}" aria-label="${t("新待办")}"><button type="submit" class="widget-icon-button" aria-label="${t("添加待办")}">${icon('plus')}</button></form>`;
 }
 
 function countdownView(item, now = new Date()) {
@@ -367,14 +374,33 @@ function ensureWeather(binding, force = false) {
   }
 }
 
+export function refreshTodoList(root, data) {
+  const list = root.querySelector('[data-live="todo-list"]');
+  if (!list) return;
+  const editable = list.hasAttribute('data-editable');
+  // Keep open row editors attached when another task is added or removed.
+  const currentRows = new Map([...list.children].map(row => [row.dataset.todoRow, row]));
+  if (!editable || !data.todos.length || !currentRows.size || currentRows.has(undefined)) {
+    list.innerHTML = todoList(data, editable);
+  } else {
+    for (const todo of data.todos) {
+      const row = currentRows.get(todo.id);
+      if (!row) list.insertAdjacentHTML('beforeend', todoRow(todo, true));
+      else if (row.classList.contains('is-done') !== todo.done || row.querySelector('label span').textContent !== todo.text) {
+        row.outerHTML = todoRow(todo, true);
+      }
+      currentRows.delete(todo.id);
+    }
+    for (const row of currentRows.values()) row.remove();
+  }
+  setText(root, 'todo-summary', todoSummary(data));
+}
+
 function updateTodoCards(binding) {
   const state = binding.context.getState();
   for (const root of widgetRoots(binding.container, 'todo')) {
     const item = findItem(root, state);
-    if (!item) continue;
-    const list = root.querySelector('[data-live="todo-list"]');
-    if (list) list.innerHTML = todoList(item.data);
-    setText(root, 'todo-summary', todoSummary(item.data));
+    if (item) refreshTodoList(root, item.data);
   }
 }
 

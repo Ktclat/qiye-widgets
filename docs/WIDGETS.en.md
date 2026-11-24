@@ -1,5 +1,9 @@
 # Widget development documentation
 
+## Inline task editing (1.0.14)
+
+Open the To-do window and choose Edit beside a task. Enter saves and Escape cancels. Editing preserves the task’s position and completion state, including in a filtered view. A failed save leaves the draft available to retry. The card continues to support quick capture and completion. See the [iTab changelog](https://itab.link/changelog.html) and [TodoMVC editing behavior](https://github.com/tastejs/todomvc/blob/master/app-spec.md#editing).
+
 ## Hot-list initial loading (1.0.13, 2026-10-24)
 
 The real host update check exposed a bootstrap ordering issue: mounting an uncached hot-list synchronously sent `hotboard` before the bundle's `ready` message, so the host discarded the call. Following [MDN microtask ordering](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide) and [MessagePort.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort/postMessage), bridge calls now send in a microtask after synchronous initialization, placing readiness first on the same port. Host readiness checks, permissions and storage stay intact.

@@ -52,6 +52,16 @@ html[data-theme=light] .cv-app{--cv-accent:var(--accent);--cv-soft:color-mix(in 
 .todo-workspace-list .w-todo-row label>span{white-space:normal;overflow-wrap:anywhere;padding:10px 0}
 .todo-workspace-list .w-todo-row input[type=checkbox]{width:17px;height:17px;min-width:17px;min-height:17px;flex-basis:17px;border-radius:5px}
 .todo-workspace-list .w-todo-row input:checked:after{transform:translate(4px,4px) rotate(-45deg)}
+.todo-workspace-body[data-filter="done"] .w-todo-row:not(.is-done),
+.todo-workspace-body[data-filter="active"] .w-todo-row.is-done {display:none}
+.todo-workspace-list [data-todo-edit] {flex:none;width:28px;height:28px;padding:5px;color:var(--app-muted);background:transparent;border-radius:7px}
+.todo-workspace-list [data-todo-edit] .widget-icon {width:15px;height:15px}
+.todo-workspace-list [data-todo-edit]:hover {color:var(--app-fg);background:var(--app-field)}
+.todo-workspace-list .w-todo-row:has([data-todo-editor]) > :not(form) {display:none}
+.todo-workspace-list [data-todo-editor] {display:flex;align-items:center;gap:6px;width:100%;min-width:0}
+.todo-workspace-list [data-todo-editor] input {cursor:text;flex:1 1 0;min-width:0;height:34px;margin:0;padding:0 8px;font:inherit;color:var(--app-fg);border:1px solid var(--app-border);border-radius:7px;background:var(--app-field)}
+.todo-workspace-list [data-todo-editor] button {flex:none;min-height:30px;padding:0 8px;color:var(--app-fg);background:var(--app-field);border-radius:7px}
+.todo-workspace-list [data-todo-editor] button[type=submit] {background:var(--accent);color:var(--accent-ink)}
 .todo-workspace-list .w-row-delete{opacity:.65}
 .todo-workspace-list .w-inline-form{height:44px;flex:none;margin-top:14px;padding:6px 8px 6px 12px;border:1px solid var(--app-border);border-radius:12px;background:var(--app-field)}
 .todo-workspace-list .w-inline-form input{height:30px;font-size:14px!important}
