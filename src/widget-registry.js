@@ -19,7 +19,7 @@ const builtins = [
   { type: 'calendar', title: '日历', description: '公历月份与中国农历', size: '4x2', icon: 'calendar' },
   { type: 'memo', title: '备忘录', description: '多条笔记、搜索、置顶与自动保存', size: '2x2', icon: 'note' },
   { type: 'notes', title: '便签', description: '随手记录，自动保存到本机', size: '2x2', icon: 'note' },
-  { type: 'todo', title: '待办清单', description: '添加、勾选和删除日常任务', size: '2x2', icon: 'check' },
+  { type: 'todo', title: '待办清单', description: '添加、编辑、勾选和删除日常任务', size: '2x2', icon: 'check' },
   { type: 'countdown', title: '倒数日', description: '记住值得期待的日子', size: '2x2', icon: 'flag' },
   // Validation only: existing focus timers upgrade to Pomodoro on load/import.
   { type: 'focus', title: '专注计时', description: '可暂停的番茄钟，关闭页面继续计时', size: '2x2', icon: 'timer', internal: true },

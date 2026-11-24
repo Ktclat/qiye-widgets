@@ -3,7 +3,7 @@ import { t, formatDate } from './i18n.js';
 import { escapeText as e } from './html.js';
 import { icon } from './icons.js';
 import { windowControls } from './widget-app-controls.js';
-import { renderWidgetContent, bindWidgets, refreshLiveWidgets, daysUntil, workdayStatus } from './widgets.js';
+import { renderTodo, refreshTodoList, renderWidgetContent, bindWidgets, refreshLiveWidgets, daysUntil, workdayStatus } from './widgets.js';
 import { parseDate, localDateKey } from './calendar.js';
 import { LIFE_WIDGETS, lifeWorkspace } from './widget-life-view.js';
 import { bindLifeWorkspace } from './widget-life-workspace.js';
@@ -65,14 +65,76 @@ function tools(item) {
 
 export function utilityWorkspace(item,state) {
   if(LIFE_WIDGETS.includes(item.widget))return lifeWorkspace(item,state);
-  if(item.widget==='todo')return `<div class="utility-app todo-workspace" data-utility-type="todo">${workspaceHeader(item)}<div class="todo-workspace-body">${tools(item)}<section class="todo-workspace-list widget-inner w-todo" data-widget="todo" data-widget-id="${e(item.id)}">${renderWidgetContent(item,state)}</section></div></div>`;
+  if(item.widget==='todo')return `<div class="utility-app todo-workspace" data-utility-type="todo">${workspaceHeader(item)}<div class="todo-workspace-body">${tools(item)}<section class="todo-workspace-list widget-inner w-todo" data-widget="todo" data-widget-id="${e(item.id)}">${renderTodo(item.data, true)}</section></div></div>`;
   const content=item.widget==='countdown'?countdownContent(item):item.widget==='workday'?workdayContent(item):renderWidgetContent(item,state);
   return `<div class="utility-app" data-utility-type="${item.widget}">${workspaceHeader(item)}<div class="utility-layout"><section class="utility-main"><section class="utility-panel widget-inner w-${item.widget}" data-widget="${item.widget}" data-widget-id="${e(item.id)}" data-widget-day="${localDateKey()}">${content}</section>${tools(item)}</section>${utilitySettings(item)}</div></div>`;
+}
+
+function bindTodoEditor(root, item, host, options) {
+  const surface = root.querySelector('.todo-workspace-body');
+  if (!surface) return;
+  const latest = () => host.getState().items.find(entry => entry.id === item.id);
+  surface.addEventListener('change', event => {
+    if (event.target.matches('[data-todo-filter]')) surface.dataset.filter = event.target.value;
+  }, options);
+  function close(form) {
+    const row = form.closest('[data-todo-row]');
+    form.remove();
+    row.querySelector('[data-todo-edit]').focus();
+  }
+  surface.addEventListener('click', event => {
+    const edit = event.target.closest('[data-todo-edit]');
+    if (edit) {
+      const todo = latest().data.todos.find(task => task.id === edit.dataset.todoEdit);
+      if (!todo) return;
+      const row = edit.closest('[data-todo-row]');
+      row.insertAdjacentHTML('beforeend', `<form data-todo-editor><input required maxlength="1000" pattern=".*\\S.*" name="text" aria-label="${t('编辑待办')}" autocomplete="off"><button type="submit">${t('保存')}</button><button type="button" data-todo-cancel>${t('取消')}</button></form>`);
+      const field = row.querySelector('[data-todo-editor] input');
+      field.value = todo.text;
+      field.focus();
+      field.select();
+    } else if (event.target.closest('[data-todo-cancel]')) close(event.target.closest('form'));
+  }, options);
+  surface.addEventListener('keydown', event => {
+    const form = event.target.closest('[data-todo-editor]');
+    if (form && event.key === 'Escape') {
+      event.stopPropagation();
+      if (event.isComposing) return;
+      event.preventDefault();
+      close(form);
+    }
+  }, options);
+  surface.addEventListener('submit', async event => {
+    const form = event.target.closest('[data-todo-editor]');
+    if (!form) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (surface.inert) return;
+    const input = form.elements.text, text = input.value.trim();
+    if (!text) { input.focus(); return; }
+    const data = latest().data;
+    const id = form.closest('[data-todo-row]').dataset.todoRow;
+    const todos = data.todos.map(todo => todo.id === id ? {...todo, text} : todo);
+    surface.inert = true;
+    try {
+      await host.saveData(item.id, {todos}, JSON.stringify(data));
+      if (!form.isConnected) return;
+      form.remove();
+      refreshTodoList(surface.querySelector('[data-widget=todo]'), latest().data);
+    } catch (error) {
+      host.toast(error.message);
+    } finally {
+      surface.inert = false;
+      if (form.isConnected) input.focus();
+      else surface.querySelector(`[data-todo-edit="${CSS.escape(id)}"]`)?.focus();
+    }
+  }, options);
 }
 
 export function bindUtilityWorkspace(root,item,host) {
   if(LIFE_WIDGETS.includes(item.widget))return bindLifeWorkspace(root,item,host);
   const controller=new AbortController(), options={signal:controller.signal};
+  bindTodoEditor(root,item,host,options);
   const initial=JSON.stringify([item.title,item.config]), form=root.querySelector('[data-utility-form]');
   const latest=()=>host.getState().items.find(entry=>entry.id===item.id);
   const cleanup=bindWidgets(root,{...host,openDialog:(kind,data)=>{if(kind!=='widget-detail')host.openDialog(kind,data);}});
@@ -82,10 +144,8 @@ export function bindUtilityWorkspace(root,item,host) {
     const world=root.querySelector('[data-world-list]');if(world)world.innerHTML=clockComparison(current);
     const weekRoot=root.querySelector('[data-habit-week]');
     if(weekRoot){const days=Array.from({length:7},(_,i)=>{const day=new Date();day.setDate(day.getDate()-6+i);return localDateKey(day);});weekRoot.innerHTML=current.data.habits.map(h=>`<div><span>${e(h.name)}</span>${days.map(day=>`<span title="${day}" aria-label="${day}: ${t(h.dates.includes(day)?'已完成':'未完成')}" class="${h.dates.includes(day)?'done':''}">${h.dates.includes(day)?'✓':'·'}</span>`).join('')}</div>`).join('');}
-    const filter=root.querySelector('[data-todo-filter]')?.value;
-    if(filter)for(const row of root.querySelectorAll('.w-todo-row'))row.hidden=filter!=='all'&&(row.classList.contains('is-done')!==(filter==='done'));
   };
-  const timer=setInterval(refresh,1000);refresh();
+  const timer=item.widget==='todo'?null:setInterval(refresh,1000);refresh();
   let saving=false;
   form?.addEventListener('submit',async event=>{
     event.preventDefault();event.stopPropagation();if(saving)return;
@@ -99,7 +159,16 @@ export function bindUtilityWorkspace(root,item,host) {
     if(button.dataset.detailAction==='window-expand'){root.closest('dialog').classList.toggle('widget-app-expanded');button.setAttribute('aria-pressed',String(root.closest('dialog').classList.contains('widget-app-expanded')));}
     if(button.dataset.duration){form.elements.duration.value=button.dataset.duration;form.elements.duration.focus();}
     if(button.hasAttribute('data-utility-export')){const url=URL.createObjectURL(new Blob([latest().data.notes],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='Qiye-note.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-    if(button.hasAttribute('data-clear-done')){try{await host.saveData(item.id,{todos:latest().data.todos.filter(todo=>!todo.done)},JSON.stringify(latest().data));if(root.isConnected)host.openDialog('widget-detail',{item:latest()});}catch(error){host.toast(error.message);}}
+    if(button.hasAttribute('data-clear-done')){
+      const surface = root.querySelector('.todo-workspace-body');
+      const data = latest().data;
+      surface.inert = true;
+      try {
+        await host.saveData(item.id, {todos:data.todos.filter(todo => !todo.done)}, JSON.stringify(data));
+        if (surface.isConnected) refreshTodoList(surface.querySelector('[data-widget=todo]'), latest().data);
+      } catch (error) { host.toast(error.message); }
+      finally { surface.inert = false; }
+    }
     refresh();
   },options);
   root.addEventListener('change',refresh,options);

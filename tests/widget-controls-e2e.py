@@ -4,7 +4,7 @@ from pathlib import Path
 from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import json, threading
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'output/playwright/controls';OUT.mkdir(parents=True,exist_ok=True)
@@ -23,6 +23,7 @@ def open_widget(page,kind,theme='dark',width=1000,height=680,value='null',mode='
       frame.onload=()=>{const channel=new MessageChannel();window.port=channel.port1;
         port.onmessage=event=>{const m=event.data;if(m.type==='ready'){window.ready=true;return;}
           if(m.type==='call'){let value=true;if(m.method==='save'){
+            if(window.failNextSave){window.failNextSave=false;port.postMessage({type:'result',id:m.id,error:'Storage unavailable'});return;}
             if(m.params.expected!==saved){port.postMessage({type:'result',id:m.id,error:'Conflict'});return;}
             saved=JSON.stringify(m.params.value);value={value:saved,revision:saved};}
             port.postMessage({type:'result',id:m.id,value});}};
@@ -47,13 +48,14 @@ with sync_playwright() as pw:
         page.wait_for_function("saved.includes('一整面的纸')")
         frame.locator('[data-note-color=pink]').click()
         page.wait_for_function("JSON.parse(saved).config.color==='pink'")
-        assert frame.locator('.life-notes.notes-paper-pink').count()==1
+        frame.locator('.life-notes.notes-paper-pink').wait_for()
         snap(page,'notes-'+theme)
         saved=page.evaluate('saved');frame=open_widget(page,'notes',theme,360,value=saved)
         assert '第二行' in frame.locator('textarea').input_value()
         assert fits(frame.locator('#widget-root'))
         snap(page,'notes-narrow-'+theme)
         todos=[{'id':f't{i}','text':('很长的任务内容，' if i==0 else '完成今日的一件小事 ')+('x'*210 if i==0 else str(i)),'done':False} for i in range(25)]
+        todos[1]['text']='旧'*1000
         frame=open_widget(page,'todo',theme,360,value=json.dumps({'config':{},'data':{'todos':todos}}))
         assert fits(frame.locator('.w-todo-list')) and fits(frame.locator('#widget-root'))
         assert frame.locator('[data-utility-form]').count()==0
@@ -65,6 +67,45 @@ with sync_playwright() as pw:
         frame.locator('[data-todo-filter]').select_option('done')
         assert frame.locator('.w-todo-row:visible').count()==1
         snap(page,'todo-narrow-'+theme)
+        before=page.evaluate('JSON.parse(saved).data.todos')
+        edit=frame.locator('[data-todo-edit="t1"]')
+        editor=frame.locator('[data-todo-editor]')
+        draft=editor.locator('input[name=text]')
+        edit.focus()
+        edit.press('Enter')
+        assert draft.input_value()==before[0]['text'] and draft.evaluate('e=>e===document.activeElement')
+        assert fits(frame.locator('.w-todo-list'))
+        snap(page,'todo-edit-narrow-'+theme)
+        draft.fill('   ')
+        draft.press('Enter')
+        assert not draft.evaluate('e=>e.validity.valid')
+        assert page.evaluate('JSON.parse(saved).data.todos')==before
+        draft.fill('取消此次修改')
+        draft.press('Escape')
+        editor.wait_for(state='hidden')
+        assert edit.evaluate('e=>e===document.activeElement')
+        assert page.evaluate('JSON.parse(saved).data.todos')==before
+        edit.click()
+        draft.fill('取消按钮测试')
+        editor.locator('[data-todo-cancel]').click()
+        editor.wait_for(state='hidden')
+        assert page.evaluate('JSON.parse(saved).data.todos')==before
+        edit.click()
+        revised='新'+before[0]['text'][1:]
+        draft.fill(revised)
+        page.evaluate('window.failNextSave=true')
+        draft.press('Enter')
+        page.wait_for_function('window.failNextSave===false')
+        assert page.evaluate('JSON.parse(saved).data.todos')==before and draft.input_value()==revised
+        editor.locator('button[type=submit]').click()
+        editor.wait_for(state='hidden')
+        assert page.evaluate('JSON.parse(saved).data.todos')==[{**before[0],'text':revised},*before[1:]]
+        assert frame.locator('[data-todo-filter]').input_value()=='done'
+        assert frame.locator('.w-todo-row:visible').count()==1
+        saved=page.evaluate('saved')
+        frame=open_widget(page,'todo',theme,360,value=saved)
+        frame.locator('[data-todo-edit="t1"]').click()
+        assert frame.locator('[data-todo-editor] input[name=text]').input_value()==revised
         frame=open_widget(page,'converter',theme,360)
         search=frame.locator('.cv-search')
         assert search.evaluate('e=>parseFloat(getComputedStyle(e).borderRadius)>=16')
@@ -77,6 +118,7 @@ with sync_playwright() as pw:
         for columns in [1,2,3]:
             frame.locator(f'[data-clock-columns="{columns}"]').click()
             page.wait_for_function(f'JSON.parse(saved).config.columns==={columns}')
+            expect(frame.locator('.world-clock-cities')).to_have_attribute('data-columns', str(columns))
             assert frame.locator('.world-clock-cities').evaluate('e=>getComputedStyle(e).gridTemplateColumns.split(" ").length')==columns
             assert fits(frame.locator('.world-clock-cities'))
             snap(page,f'clock-{columns}-{theme}')
@@ -91,4 +133,4 @@ with sync_playwright() as pw:
     assert not errors,errors
     browser.close()
 server.shutdown()
-print('PASS notes surface/save, todo overflow/delete/filter, converter search, persisted clock columns, file tile sizes, both themes')
+print('PASS notes surface/save, todo overflow/delete/filter/edit/retry, converter search, persisted clock columns, file tile sizes, both themes')

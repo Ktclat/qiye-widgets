@@ -1,5 +1,9 @@
 # 小组件开发文档
 
+## 待办行内编辑（1.0.14）
+
+iTab 的公开更新记录把待办列为桌面组件。栖页卡片仍可直接添加或勾选任务。打开完整窗口后，使用每一行的编辑按钮即可修改文字，Enter 保存，Esc 取消。输入框支持旧任务允许的 1000 字，保存沿用实例版本检查；失败可在原行重试。公开参考见 [iTab 更新日志](https://itab.link/changelog.html) 和 [TodoMVC 编辑交互说明](https://github.com/tastejs/todomvc/blob/master/app-spec.md#editing)。
+
 ## 热搜榜首次加载（1.0.13，2026-10-24）
 
 实际宿主的更新检查发现：热榜在同步挂载时立即调用 `hotboard`，但组件的 `ready` 消息在整段初始化末尾才发送；宿主会丢弃就绪前的调用，导致空缓存时首次显示“榜单暂不可用”。依据 [MDN 微任务执行顺序](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide) 和 [MessagePort.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/MessagePort/postMessage)，桥接层在一个微任务中发送调用，保证同步启动完成、就绪消息已进入同一端口队列。无需放宽宿主的就绪检查，也不改变存储或权限协议。
